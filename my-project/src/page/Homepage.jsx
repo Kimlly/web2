@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import HomepageLayout from '../layout/HomepageLayout'
 
 function Homepage() {

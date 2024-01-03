@@ -1,12 +1,11 @@
 import React from 'react'
-import Navbar1 from '../component/navbar1'
-import Footer from '../component/footer'
+import Navbar from '../component/navbar'
 
 function HomepageLayout({ children }) {
   return (
     <>
         <div className='flex flex-col'>
-            <Navbar1 />
+          <Navbar />
             {children}
         </div>
     </>

@@ -7,7 +7,6 @@ import Teampage from './page/teampage';
 import Homepage from './page/Homepage';
 import Recoverpwpage from './page/recoverpwpage';
 import Resetpw from './page/resetpwpage';
-import Contactuspage from './page/Contactuspage';
 import Artisthomepage from './page/artisthomepage';
 import Createpage from './page/createpage';
 import Userpfpage from './page/userpfpage';
@@ -25,7 +24,6 @@ function App() {
                     <Route path='/homepage' element={<Homepage />} />
                     <Route path='/recoverpw' element={<Recoverpwpage />} />
                     <Route path='/resetpw' element={<Resetpw />} />
-                    <Route path='/contactus' element={<Contactuspage />} />
                     <Route path='/artisthomepage' element={<Artisthomepage />} />
                     <Route path='/createpage' element={<Createpage />} />
                     <Route path='/userpfpage' element={<Userpfpage />} />
