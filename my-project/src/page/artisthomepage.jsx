@@ -1,8 +1,9 @@
 import React from 'react'
-
-function grid() {
+import Artistlayout from '../layout/Artistlayout'
+function Artisthomepage() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <Artistlayout>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
   <div className="grid gap-4">
     <div>
       <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg"
@@ -60,7 +61,8 @@ function grid() {
     </div>
   </div>
 </div>
+    </Artistlayout>
   )
 }
 
-export default grid
+export default Artisthomepage
