@@ -1,6 +1,6 @@
 import React from 'react'
 
-function footer() {
+function Footer() {
   return (
     <footer className="bg-white dark:bg-gray-900">
     <div className="mx-auto w-full max-w-screen-xl">
@@ -127,4 +127,4 @@ function footer() {
   )
 }
 
-export default footer
+export default Footer

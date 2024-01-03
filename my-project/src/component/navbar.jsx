@@ -1,6 +1,6 @@
 import React from 'react'
 
-function navbar() {
+function Navbar() {
   return (
     
 <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -77,4 +77,4 @@ function navbar() {
   )
 }
 
-export default navbar
+export default Navbar
