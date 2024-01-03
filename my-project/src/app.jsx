@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Contactpage from './page/Contactpage';
+import Landingpage from './page/Landingpage';
+import Login from './page/Loginpage';
+import Signup from './page/Signuppage';
 
-
-function app() {
+function App() {
     return (
         <>
             <BrowserRouter>
@@ -16,4 +19,4 @@ function app() {
     );
 }
 
-export default app;
+export default App;
