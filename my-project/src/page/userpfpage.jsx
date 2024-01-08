@@ -1,47 +1,143 @@
-import React from 'react'
+import React, { useState } from 'react'
+import HomepageLayout from '../layout/HomepageLayout'
+import { auth } from '../authentication/firebase'
+import { useNavigate } from 'react-router-dom'
+import { signOut } from 'firebase/auth'
+import Modal from '../component/modal'
 
 function Userpfpage() {
-  return (
-    <div
-    class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-white shadow-xl rounded-lg text-gray-900">
-    <div class="rounded-t-lg h-32 overflow-hidden">
-        <img class="object-cover object-top w-full" src='https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ' alt='Mountain'/>
-    </div>
-    <div class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
-        <img class="object-cover object-center h-32" src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ' alt='Woman looking front'/>
-    </div>
-    <div class="text-center mt-2">
-        <h2 class="font-semibold">Sarah Smith</h2>
-        <p class="text-gray-500">Freelance Web Designer</p>
-    </div>
-    <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
-        <li class="flex flex-col items-center justify-around">
-            <svg class="w-4 fill-current text-blue-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path
-                    d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-            </svg>
-            <div>2k</div>
-        </li>
-        <li class="flex flex-col items-center justify-between">
-            <svg class="w-4 fill-current text-blue-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path
-                    d="M7 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0 1c2.15 0 4.2.4 6.1 1.09L12 16h-1.25L10 20H4l-.75-4H2L.9 10.09A17.93 17.93 0 0 1 7 9zm8.31.17c1.32.18 2.59.48 3.8.92L18 16h-1.25L16 20h-3.96l.37-2h1.25l1.65-8.83zM13 0a4 4 0 1 1-1.33 7.76 5.96 5.96 0 0 0 0-7.52C12.1.1 12.53 0 13 0z" />
-            </svg>
-            <div>10k</div>
-        </li>
-        <li class="flex flex-col items-center justify-around">
-            <svg class="w-4 fill-current text-blue-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path
-                    d="M9 12H1v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6h-8v2H9v-2zm0-1H0V5c0-1.1.9-2 2-2h4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v6h-9V9H9v2zm3-8V2H8v1h4z" />
-            </svg>
-            <div>15</div>
-        </li>
-    </ul>
-    <div class="p-4 border-t mx-8 mt-2">
-        <button class="w-1/2 block mx-auto rounded-full bg-gray-900 hover:shadow-lg font-semibold text-white px-6 py-2">Follow</button>
-    </div>
-</div>
-  )
+    const navigate = useNavigate()
+    const [showModal, setShowModal] = useState(false);
+    const handleOnClose=()=>setShowModal(false)
+
+    const userSignOut = () => (
+        signOut(auth).then(() => {
+            navigate("/")
+        }).catch(error => console.log(error))
+    )
+
+    return (
+        <HomepageLayout>
+            <><div className="flex justify-center">
+                <div className="max-w-sm rounded p-5 text-center text-gray-500">
+                    <img className="mx-auto h-32 w-32 rounded-full" src="https://i.pinimg.com/564x/61/36/26/6136265d0bd70e2a91df4241f902890c.jpg" alt="" />
+                    <div className="mt-5 text-sm">
+                        <a href="#" className="text-2xl font-medium leading-none text-gray-900 transition duration-500 ease-in-out hover:text-indigo-600">Jey's </a>
+                        <p>Blogger &amp; Youtuber</p>
+                    </div>
+
+                    <p className="mt-2 text-lg text-gray-900">she fell in love but he was fictional.</p>
+                </div>
+            </div>
+                <div className="flex justify-center">
+                    <button onClick={()=>setShowModal(true)} className="rounded-full bg-gray-300 px-4 py-2 text-black hover:bg-gray-500" >Edit profile</button>
+                    <button onClick={userSignOut} className="rounded-full bg-gray-300 px-4 py-2 text-black hover:bg-gray-500">Log out</button>
+                </div>
+                <Modal onClose={handleOnClose} visible={showModal}/>
+                <div className="p-8">
+                    <nav className="flex justify-center space-x-4">
+                        <a href="/dashboard" className="rounded-md px-3 py-2 text-black hover:bg-gray-200 hover:text-slate-900">Created</a>
+                        <a href="/team" className="rounded-md px-3 py-2 text-black hover:bg-gray-200 hover:text-slate-900">Saved</a>
+                    </nav>
+                </div><div className="mx-auto max-w-7xl pt-2">
+                    <div className="columns-2 gap-4 p-2 md:columns-3 md:p-4 lg:columns-4">
+                        <div className="break-inside-avoid rounded-lg bg-white shadow-md hover:shadow-lg">
+                            <div className="flex flex-col">
+                                <img className="w-full overflow-hidden" src="https://i.pinimg.com/564x/5d/d9/9e/5dd99e9b0629d175db863d62fdc30594.jpg" />
+                                <div className="basis-14 p-2 text-gray-800">
+                                    <div className="flex justify-between">
+                                        <p className="text-md font-bold leading-6">A lion with Dan</p>
+                                        <div className="flex items-center justify-between space-x-1 text-sm text-gray-500">
+                                            <div className="mt-1 flex gap-1">
+                                                <span>10</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-4 break-inside-avoid rounded-lg bg-white shadow-md hover:shadow-lg">
+                            <div className="flex flex-col">
+                                <img className="w-full overflow-hidden" src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=2952&amp;q=80" />
+                                <div className="basis-14 p-2 text-gray-800">
+                                    <div className="flex justify-between">
+                                        <p className="text-md font-bold leading-6">Mountain summit</p>
+                                        <div className="flex items-center justify-between space-x-1 text-sm text-gray-500">
+                                            <div className="mt-1 flex gap-1">
+                                                <span>10</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-4 break-inside-avoid rounded-lg bg-white shadow-md hover:shadow-lg">
+                            <div className="flex flex-col">
+                                <img className="w-full overflow-hidden" src="https://cdn.pixabay.com/photo/2015/11/16/16/28/bird-1045954_960_720.jpg" />
+                                <div className="basis-14 p-2 text-gray-800">
+                                    <div className="flex justify-between">
+                                        <p className="text-md font-bold leading-6">The bird</p>
+                                        <div className="flex items-center justify-between space-x-1 text-sm text-gray-500">
+                                            <div className="mt-1 flex gap-1">
+                                                <span>10</span>
+
+
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-4 break-inside-avoid rounded-lg bg-white shadow-md hover:shadow-lg">
+                            <div className="flex flex-col">
+                                <img className="w-full overflow-hidden" src="https://images.unsplash.com/photo-1463288889890-a56b2853c40f?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=3132&amp;q=80" />
+                                <div className="basis-14 p-2 text-gray-800">
+                                    <div className="flex justify-between">
+                                        <p className="text-md font-bold leading-6">Mountain an lake</p>
+                                        <div className="flex items-center justify-between space-x-1 text-sm text-gray-500">
+                                            <div className="mt-1 flex gap-1">
+                                                <span>10</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-4 break-inside-avoid rounded-lg bg-white shadow-md hover:shadow-lg">
+                            <div className="flex flex-col">
+                                <img className="w-full overflow-hidden" src="https://i.pinimg.com/564x/62/a4/e1/62a4e12c60987590a76b8924c20eb42d.jpg" />
+                                <div className="basis-14 p-2 text-gray-800">
+                                    <div className="flex justify-between">
+                                        <p className="text-md font-bold leading-6">Beautiful landscape</p>
+                                        <div className="flex items-center justify-between space-x-1 text-sm text-gray-500">
+                                            <div className="mt-1 flex gap-1">
+                                                <span>4</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </div></>
+
+        </HomepageLayout>
+    )
 }
 
 export default Userpfpage
