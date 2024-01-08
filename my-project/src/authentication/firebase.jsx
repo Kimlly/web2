@@ -29,6 +29,12 @@ const mainApp = initializeApp(firebaseConfig);
 
 // Uncomment the following lines if you want to initialize a second Firebase app
 const imageApp = initializeApp(imageFirebaseConfig, "imageApp");
+
+firebase.initializeApp(firebaseConfig);
+const db2 = firebase.firestore();
+export const {Users} = db.collection("Users");
+
+
 export const db = getDatabase(imageApp);
 export const storage = getStorage();
 

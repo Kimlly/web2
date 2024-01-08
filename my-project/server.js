@@ -1,22 +1,16 @@
-import http from 'http';
-import cors from 'cors';
-
 import express from 'express';
+import cors from 'cors';
 const app = express();
 
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'https://auction-site-wct.vercel.app'); // update to match the domain you will make the request from
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 app.use(cors());
+app.use(express.json());
 
-const hostname = '127.0.0.1';
-const port = 3000;
 
-app.get('/', (req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello, World!\n');
-});
 
-app.use('/api/posts', postRouter);
-
-app.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
-});
+export default app;
