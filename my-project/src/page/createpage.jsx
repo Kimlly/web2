@@ -8,7 +8,7 @@ import HomepageLayout from '../layout/HomepageLayout';
 
 // ----------- import some firebase functions --------------
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { Timestamp, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, getDocs,onSnapshot,deleteDoc,doc } from 'firebase/firestore';
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
@@ -74,9 +74,42 @@ const CreatePost = () => {
       setUploading(false);
       
     });
+    
+      onSnapshot(dbCollectionRef,(snapshot)=>{
+      let posts=[]
+      snapshot.docs.forEach((doc)=>{
+        posts.push({...doc.data(),id:doc.id})
+      })
+      console.log(posts)
+    })
 
     // ----------- Done --------------
+
+    // getDocs(dbCollectionRef)
+    // .then((snapshot)=>{
+    //   let posts=[]
+    //   snapshot.docs.forEach((doc)=>{
+    //     posts.push({...doc.data(),id:doc.id})
+    //   })
+
+    //   console.log(posts)
+    // })
+    // .catch(err=>{
+    //   console.log(err.message)
+    // }) 
+
   };
+
+  // DELETE 
+  // const deleteimg=document.querySelector('.delete')
+  // deleteimg.addEventListener('submit',(e)=>{
+  //   e.preventDefault()
+  //   const docRef=doc(storage,'posts',deleteimg.id.value)
+  //   deleteDoc(docRef)
+  //   .then(()=>{
+  //     deleteimg.reset()
+  //   })
+  // })
 
   const handleUploadImg = (e) => {
     e.preventDefault();
