@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { NavLink,Link,useLocation } from 'react-router-dom';
 
 function Navbar() {
+  const location = useLocation();
+  const isLandingpage=location.pathname==='/';
+
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4">
@@ -10,8 +12,22 @@ function Navbar() {
           <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MΣЯΛKI</span>
         </Link>
+      {isLandingpage ? (
+        <>
 
-        <div id="mega-menu-icons" className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
+      <li>
+        <NavLink
+          to='/team'
+          activeclassname="text-blue-600"  // Apply this class for the active link
+          className="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700"
+        >
+          Team
+        </NavLink>
+
+      </li></>
+      ):(
+        <>
+      <div id="mega-menu-icons" className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
           <ul className="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
             <li>
               <NavLink
@@ -40,16 +56,6 @@ function Navbar() {
               >
                 Contact
               </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to='/team'
-                activeclassname="text-blue-600"  // Apply this class for the active link
-                className="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700"
-              >
-                Team
-              </NavLink>
-
             </li>
           </ul>
           <Link to='/userpfpage' className="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
@@ -84,7 +90,9 @@ function Navbar() {
                />
             </div>
           </div>
-        </form>
+        </form></>
+        )}
+        
 
       </div>
 

@@ -3,17 +3,27 @@ import React, { useState } from 'react'
 import { auth } from '../authentication/firebase'
 import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
+import { UserAuth } from '../context/AuthContext'
+
+
 function Signup() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [cfpassword, setCfPassword] = useState('')
     const [validation, setValidation] = useState(true)
 
+    const {createUser}=UserAuth()
+
     const navigate = useNavigate()
     const signUp = (e) => {
         e.preventDefault();
         createUserWithEmailAndPassword(auth, email, password, cfpassword)
             .then((userCredential) => {
+                Swal.fire({
+                    title: 'Create Account Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  })
                 navigate("/homepage")
             }).catch((error) => {
                 Swal.fire({

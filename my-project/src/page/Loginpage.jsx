@@ -5,6 +5,7 @@ import { auth } from '../authentication/firebase'
 import Swal from 'sweetalert2'
 
 function Login() {
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -13,6 +14,11 @@ function Login() {
         e.preventDefault();
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
+                Swal.fire({
+                    title: 'Log In Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  })
                 navigate("/homepage")
             }).catch((error) => {
                 Swal.fire({

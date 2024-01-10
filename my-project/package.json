@@ -11,6 +11,8 @@
     "server": "node server.js"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "clsx": "^2.1.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "firebase": "^10.7.1",
@@ -19,6 +21,7 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.21.1",
     "sweetalert2": "^11.10.2",
+    "tailwind-merge": "^2.2.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
