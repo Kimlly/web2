@@ -14,17 +14,15 @@ function Userpfpage() {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  const dbCollectionRef = collection(db, 'posts');
-
   const handleOnClose = () => setShowModal(false);
 
   const userSignOut = () => {
     logout();
-    // signOut(auth)
-    //   .then(() => {
-    //     navigate('/');
-    //   })
-    //   .catch((error) => console.log(error));
+    signOut(auth)
+      .then(() => {
+        navigate('/');
+      })
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
@@ -63,7 +61,8 @@ function Userpfpage() {
       <div className='flex justify-center'>
         <div className='max-w-sm rounded p-5 text-center text-gray-500'>
           <img className='mx-auto h-32 w-32 rounded-full' src={user.pfImgURL} alt='' />
-          <div className='mt-5 text-sm'>
+          <div className='mt-5'>
+            <p className='text-xl font-semibold mb-1'>{user.username}</p>
             <a
               href='#'
               className='text-2xl font-medium leading-none text-gray-900 transition duration-500 ease-in-out hover:text-indigo-600'

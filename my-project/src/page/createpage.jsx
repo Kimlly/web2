@@ -68,6 +68,8 @@ const CreatePost = () => {
         uid: user.uid,
         email: user.email,
       },
+      likes: [],
+      comments: [],
       createdAt: new Date(Date.now()).toISOString(),
     };
 
