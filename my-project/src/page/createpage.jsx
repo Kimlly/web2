@@ -6,10 +6,12 @@ import { db, storage } from '../authentication/firebase';
 import HomepageLayout from '../layout/HomepageLayout';
 
 // ----------- import some firebase functions --------------
-import { addDoc, collection, onSnapshot } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { UserAuth } from '../context/AuthContext';
 
 const CreatePost = () => {
+  const { user } = UserAuth();
   const [title, setTitle] = useState('');
   const [errorTitle, setErrorTitle] = useState('');
 
@@ -56,10 +58,17 @@ const CreatePost = () => {
     const data = await uploadBytes(fileRef, fileImage);
     const val = await getDownloadURL(data.ref);
 
+    console.log(user);
+
     const inputData = {
       title,
       description,
       imageURL: val,
+      postOwner: {
+        uid: user.uid,
+        email: user.email,
+      },
+      createdAt: new Date(Date.now()).toISOString(),
     };
 
     console.log(inputData);
@@ -68,16 +77,16 @@ const CreatePost = () => {
     const dbCollectionRef = collection(db, 'posts');
 
     addDoc(dbCollectionRef, inputData).then((res) => {
-      console.log(res);
-      setUploading(false);
-    });
+      const postId = res.id;
+      console.log(postId);
 
-    onSnapshot(dbCollectionRef, (snapshot) => {
-      let posts = [];
-      snapshot.docs.forEach((doc) => {
-        posts.push({ ...doc.data(), id: doc.id });
+      getDoc(doc(db, 'users', user.uid)).then((userData) => {
+        const updatePosts = userData.data().posts;
+        updatePosts.push(postId);
+
+        setDoc(doc(db, 'users', user.uid), { ...userData.data(), posts: updatePosts });
       });
-      console.log(posts);
+      setUploading(false);
     });
 
     // ----------- Done --------------
@@ -133,6 +142,8 @@ const CreatePost = () => {
     <HomepageLayout>
       <div className='w-full'>
         <div className='flex flex-col max-w-[500px] mx-auto my-10 px-5 lg:px-0'>
+          <h1 className='text-3xl font-semibold text-center my-5'>Create Post</h1>
+
           <form className='mt-5 space-y-10' onSubmit={(e) => onSubmit(e)}>
             {image ? null : (
               <label
@@ -182,8 +193,6 @@ const CreatePost = () => {
                 </div>
               )}
             </div>
-
-            <h1 className='text-3xl font-semibold text-center mb-10'>Create Post</h1>
 
             <div className='flex flex-col gap-2'>
               <label htmlFor='title' className='text-xl font-semibold'>

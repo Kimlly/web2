@@ -1,5 +1,5 @@
 import { signOut } from 'firebase/auth';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../authentication/firebase';
@@ -8,7 +8,7 @@ import { UserAuth } from '../context/AuthContext';
 import HomepageLayout from '../layout/HomepageLayout';
 
 function Userpfpage() {
-  const { user, logOut } = UserAuth();
+  const { user, logout } = UserAuth();
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
@@ -18,24 +18,43 @@ function Userpfpage() {
 
   const handleOnClose = () => setShowModal(false);
 
-  const userSignOut = () =>
-    signOut(auth)
-      .then(() => {
-        navigate('/');
-      })
-      .catch((error) => console.log(error));
-  useEffect(() => {
-    onSnapshot(dbCollectionRef, (snapshot) => {
-      let posts = [];
-      snapshot.docs.forEach((doc) => {
-        posts.push({ ...doc.data(), id: doc.id });
-        // console.log([{...doc.data(),id:doc.id}]);
-      });
+  const userSignOut = () => {
+    logout();
+    // signOut(auth)
+    //   .then(() => {
+    //     navigate('/');
+    //   })
+    //   .catch((error) => console.log(error));
+  };
 
-      setData(posts);
-      console.log(posts);
-    });
-  }, []);
+  useEffect(() => {
+    //Do this if there is a user logged in
+    if (user.uid) {
+      //Fetch only data that is posted by the user
+      const fetchData = async () => {
+        //Reset
+        setData([]);
+
+        // user is an object with a property 'posts' which is an array of post IDs
+        await Promise.all(
+          user.posts.map(async (postId) => {
+            const docRef = doc(db, 'posts', postId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+              const postData = { ...docSnap.data(), id: postId };
+              setData((prevData) => [...prevData, postData]);
+            } else {
+              console.log('Document does not exist for post ID:', postId);
+            }
+          })
+        );
+      };
+
+      // Call the async function
+      fetchData();
+    }
+  }, [user]);
 
   return (
     <HomepageLayout>
@@ -43,17 +62,13 @@ function Userpfpage() {
 
       <div className='flex justify-center'>
         <div className='max-w-sm rounded p-5 text-center text-gray-500'>
-          <img
-            className='mx-auto h-32 w-32 rounded-full'
-            src='https://i.pinimg.com/564x/61/36/26/6136265d0bd70e2a91df4241f902890c.jpg'
-            alt=''
-          />
+          <img className='mx-auto h-32 w-32 rounded-full' src={user.pfImgURL} alt='' />
           <div className='mt-5 text-sm'>
             <a
               href='#'
               className='text-2xl font-medium leading-none text-gray-900 transition duration-500 ease-in-out hover:text-indigo-600'
             >
-              {user && user.email}{' '}
+              {user && user.email}
             </a>
           </div>
 
@@ -82,7 +97,7 @@ function Userpfpage() {
       </nav>
       <div className='mx-auto  pt-2' />
 
-      <div className='columns-6 mx-auto space-y-2 space-x-2'>
+      <div className='columns-6 mx-auto space-y-2 space-x-2 px-3 md:px-5'>
         {data.map((item, index) => (
           <div key={index} className='group relative rounded-lg overflow-hidden bg-gray-300 hover:scale-105'>
             <img className='height={300} width={200}' src={item.imageURL} alt='' />

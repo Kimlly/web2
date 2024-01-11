@@ -1,6 +1,8 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { UserAuth } from '../context/AuthContext';
 
 function Navbar() {
+  const { user } = UserAuth();
   const location = useLocation();
   const isLandingpage = location.pathname === '/';
 
@@ -8,20 +10,18 @@ function Navbar() {
     <nav className='bg-white border-gray-200 dark:bg-gray-900'>
       <div className='flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4'>
         <Link to='/' className='flex items-center space-x-3 rtl:space-x-reverse'>
-          <img src='https://flowbite.com/docs/images/logo.svg' className='h-8' alt='Flowbite Logo' />
+          {/* <img src='https://flowbite.com/docs/images/logo.svg' className='h-8' alt='Flowbite Logo' /> */}
           <span className='self-center text-2xl font-semibold whitespace-nowrap dark:text-white'>MΣЯΛKI</span>
         </Link>
         {isLandingpage ? (
           <>
-            <li>
-              <NavLink
-                to='/team'
-                activeclassname='text-blue-600' // Apply this class for the active link
-                className='block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700'
-              >
-                Team
-              </NavLink>
-            </li>
+            <NavLink
+              to='/team'
+              activeclassname='text-blue-600' // Apply this class for the active link
+              className='block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700'
+            >
+              Team
+            </NavLink>
           </>
         ) : (
           <>
@@ -58,16 +58,17 @@ function Navbar() {
               </ul>
               <Link
                 to='/userpfpage'
-                className='relative w-10 h-10 ml-5 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600'
+                className='relative w-10 h-10 ml-10 border overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600'
               >
-                <svg
+                <img src={user.pfImgURL} alt={user.email} />
+                {/* <svg
                   className='absolute w-12 h-12 text-gray-400 -left-1'
                   fillRule='currentColor'
                   viewBox='0 0 20 20'
                   xmlns='http://www.w3.org/2000/svg'
                 >
                   <path fillRule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clipRule='evenodd'></path>
-                </svg>
+                </svg> */}
               </Link>
             </div>
 

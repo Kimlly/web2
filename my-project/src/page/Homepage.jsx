@@ -1,15 +1,16 @@
-import React, { useState, Fragment, useEffect } from 'react';
-import HomepageLayout from '../layout/HomepageLayout';
-import Card from '../component/card';
 import { Dialog, Transition } from '@headlessui/react';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { storage, db } from '../authentication/firebase';
+import { Fragment, useEffect, useState } from 'react';
+import { db } from '../authentication/firebase';
+import Card from '../component/card';
+import HomepageLayout from '../layout/HomepageLayout';
 
 function Homepage() {
   // const [showModal, setShowModal] = useState(false);
   // const handleOnClose = () => setShowModal(false)
   let [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [activePost, setActivePost] = useState('');
 
   function handleModal() {
     setIsOpen(!isOpen);
@@ -34,7 +35,10 @@ function Homepage() {
         {data.map((item, index) => (
           <div
             key={index}
-            onClick={handleModal}
+            onClick={() => {
+              handleModal();
+              setActivePost(item);
+            }}
             className='group relative rounded-lg overflow-hidden bg-gray-300 hover:scale-105'
           >
             <img
@@ -44,7 +48,7 @@ function Homepage() {
               alt=''
             />
 
-            <div className='absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100'>
+            {/* <div className='absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100'>
               <button
                 type='button'
                 className='inline-flex items-center rounded-l-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
@@ -74,7 +78,7 @@ function Homepage() {
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
                   viewBox='0 0 24 24'
-                  stroke-width='1.5'
+                  strokeWidth='1.5'
                   stroke='currentColor'
                   className='h-5 w-5'
                 >
@@ -86,7 +90,7 @@ function Homepage() {
                 </svg>
                 Like
               </button>
-            </div>
+            </div> */}
           </div>
         ))}
       </div>
@@ -118,7 +122,7 @@ function Homepage() {
               >
                 <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
                   <div>
-                    <Card />
+                    <Card data={activePost} />
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
