@@ -71,7 +71,7 @@ function Userpfpage() {
             </a>
           </div>
 
-          <p className='mt-2 text-lg text-gray-900'>she fell in love but he was fictional.</p>
+          <p className='mt-2 text-lg text-gray-900'>{user.info}</p>
         </div>
       </div>
 

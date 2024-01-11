@@ -13,6 +13,7 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [cfpassword, setCfPassword] = useState('');
+  const [info,setInfo]=useState('')
   const [validation, setValidation] = useState(true);
 
   const [profileImgURL, setProfileImgURL] = useState('');
@@ -22,6 +23,12 @@ function Signup() {
 
   const signUp = async (e) => {
     e.preventDefault();
+     
+    // Check if password and confirm password match
+     if (password !== cfpassword) {
+      setValidation(false);
+      return;
+    }
 
     const fileRef = ref(storage, `img/${v4()}`);
 
@@ -31,6 +38,7 @@ function Signup() {
     const inputData = {
       username,
       email,
+      info,
       pfImgURL: val,
       role: 'user',
       posts: [],
@@ -38,18 +46,23 @@ function Signup() {
       createdAt: new Date(Date.now()).toISOString(),
     };
 
-    createUserWithEmailAndPassword(auth, email, password, cfpassword)
+    createUserWithEmailAndPassword(auth, email, password, cfpassword,info)
       .then(async (userCredential) => {
         console.log(userCredential.user.uid);
 
         await setDoc(doc(db, 'users', userCredential.user.uid), inputData);
 
-        Swal.fire({
+         // Only navigate to homepage when passwords match
+         if (password === cfpassword) {
+          Swal.fire({
           title: 'Create Account Successfully',
           icon: 'success',
           confirmButtonText: 'OK',
         });
-        navigate('/homepage');
+          navigate('/homepage');
+        }
+        
+        // navigate('/homepage');
       })
       .catch(() => {
         Swal.fire({
@@ -64,6 +77,7 @@ function Signup() {
       setValidation(true);
     } else {
       setValidation(false);
+      
     }
     console.log(validation);
   }
@@ -162,6 +176,24 @@ function Signup() {
                 />
                 {validation ? '' : <p className='text-red-600 indent-3 text-sm mt-1 '> password is not matching</p>}
               </div>
+
+              <div>
+                <label htmlFor='info' className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+                  About
+                </label>
+                <div className='mt-2'>
+                  <textarea
+                    type='text'
+                    value={info}
+                    onChange={(e) => setInfo(e.target.value)}
+                    name='info'
+                    id='info'
+                    placeholder='Write something about yourself'
+                    className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                  required></textarea>
+                </div>
+              </div>
+
               <div className='flex items-start'>
                 <div className='flex items-center h-5'>
                   <input
@@ -190,12 +222,15 @@ function Signup() {
               >
                 Create an account{' '}
               </button>
-              <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
+              {validation?'':(
+                <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
                 Already have an account?{' '}
                 <Link to='/login' className='font-medium text-primary-600 hover:underline dark:text-primary-500'>
                   Login here
                 </Link>
               </p>
+              )}
+              
             </form>
           </div>
         </div>

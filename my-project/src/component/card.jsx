@@ -91,20 +91,6 @@ function Card({ data }) {
     });
   };
 
-  // const dbCollectionRef = collection(db, 'posts');
-  // const [data, setData] = useState([]);
-  // useEffect(() => {
-  //   onSnapshot(dbCollectionRef, (snapshot) => {
-  //     let posts = [];
-  //     snapshot.docs.forEach((doc) => {
-  //       posts.push({ ...doc.data(), id: doc.id });
-  //       // console.log([{...doc.data(),id:doc.id}]);
-  //     });
-
-  //     setData(posts);
-  //     console.log(posts);
-  //   });
-  // }, []);
 
   return (
     <div className=' p-6 bg-white border border-gray-200 rounded-2xl shadow dark:bg-gray-800 dark:border-gray-700'>
