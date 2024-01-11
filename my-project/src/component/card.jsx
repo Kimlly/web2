@@ -1,22 +1,42 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
+import { collection, onSnapshot } from 'firebase/firestore';
+import { storage, db } from '../authentication/firebase';
 
 
 function Card() {
+    const dbCollectionRef = collection(db, "posts")
+    const [data, setData] = useState([]);
+    useEffect(() => {
+
+        onSnapshot(dbCollectionRef, (snapshot) => {
+          let posts = []
+          snapshot.docs.forEach((doc) => {
+            posts.push({ ...doc.data(), id: doc.id })
+            // console.log([{...doc.data(),id:doc.id}]);
+          })
+    
+          setData(posts)
+          console.log(posts);
+    
+        })
+      }, [])
 
     return (
-        <div class="max-w-lg p-6 bg-white border border-gray-200 rounded-2xl shadow dark:bg-gray-800 dark:border-gray-700">
-            <img class="h-auto max-w-full rounded-lg mb-3 " src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg" alt="" />
+        <>
+        {data.map((item, index) =>(
+         <>    <div  key={index} class="max-w-lg p-6 bg-white border border-gray-200 rounded-2xl shadow dark:bg-gray-800 dark:border-gray-700">
+            <img  class="h-auto max-w-full rounded-lg mb-3 " src={item.imageURL} alt="" />
             <div class="flex items-center gap-4">
                 <img class="w-10 h-10 rounded-full" src="https://scontent.fpnh19-1.fna.fbcdn.net/v/t39.30808-1/409651562_3571806073136781_558167033718993052_n.jpg?stp=dst-jpg_p240x240&_nc_cat=111&ccb=1-7&_nc_sid=11e7ab&_nc_eui2=AeExgWTT_zS0I5JddbjYLhllbChTSz-d6WJsKFNLP53pYjuRmaOiED3DUHq1MQZMQT4eAc8iGgp0meklEk47RQ-Q&_nc_ohc=FZKO3SC8x_AAX99Jfg0&_nc_ht=scontent.fpnh19-1.fna&oh=00_AfCN-dS5I_PddUovoaa0-P_MQvZg_FFV9f8QaK2dO-EYpw&oe=65A13271" alt="" />
                 <div class="font-medium dark:text-white">
-                    <div>Kao Sannymol</div>
+                    <div>nymol</div>
                     <div class="text-sm text-gray-500 dark:text-gray-400">Joined in August 2014</div>
                 </div>
             </div>
             <a href="#">
-                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Art Tittle</h5>
+                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{item.title}</h5>
             </a>
-            <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">Art Descriptions</p>
+            <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{item.description}</p>
             <div class="flex -space-x-4 rtl:space-x-reverse ">
                 <img class="w-10 h-10 border-2 border-white rounded-full dark:border-gray-800" src="https://scontent.fpnh5-5.fna.fbcdn.net/v/t39.30808-6/364712451_1839596593101347_4735073780204185409_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=9c7eae&_nc_eui2=AeE00FoEHQP7jWvRQMqZTQEDPCDzqBwqnaA8IPOoHCqdoJWx9LsSTsdd-R2A1EIbUz9vAIuGESA8iIL6HiPEM0Ut&_nc_ohc=I6WpLthIlgYAX_GzrbK&_nc_ht=scontent.fpnh5-5.fna&oh=00_AfDFKO_6A5sonYgIBZH-m2Ny_6kF35W3ykU8E7eE9pi8mA&oe=65A16EDA" alt="" />
                 <img class="w-10 h-10 border-2 border-white rounded-full dark:border-gray-800" src="https://scontent.fpnh5-5.fna.fbcdn.net/v/t39.30808-6/405207521_890631325986100_2046401148450773974_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=9c7eae&_nc_eui2=AeEpVHoUnuSGYRYfYymBbhsYaO-8LrhqoqFo77wuuGqioUYfw89CV80-4l7sar_ruQdplgmtr6kY5ynX11olFjRX&_nc_ohc=eyuMXTW_62sAX_uIYHP&_nc_ht=scontent.fpnh5-5.fna&oh=00_AfC-V7Um6r4wzeHfYJI5K63ap7fIdS5aAKhPoDkraZgorg&oe=65A17AA2" alt="" />
@@ -68,7 +88,11 @@ function Card() {
                     </div>
                 </form>
             </div>
-        </div>
+            </div>
+        </>
+        ))}
+        </>
+       
     )
 }
 

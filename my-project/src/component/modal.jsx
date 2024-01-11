@@ -54,12 +54,6 @@ function Modal({ visible, onClose }) {
                                         <input type="text" id="username" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
                                     </div>
                                 </div>
-                                {/* <div className="pb-5">
-                                    <label htmlFor="social" className="block text-sm font-medium leading-6 text-gray-900">Social Links</label>
-                                    <div className="mt-2">
-                                        <input type="url" id="social" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Add your social link" required />
-                                    </div>
-                                </div> */}
 
                                 <div className="mt-6 flex items-center justify-end gap-x-6">
                                     <button onClick={onClose} type="button" className="text-sm font-semibold leading-6 text-gray-900">Close</button>
