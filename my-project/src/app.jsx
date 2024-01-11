@@ -5,9 +5,6 @@ import Login from './page/Loginpage';
 import Signup from './page/Signuppage';
 import Teampage from './page/teampage';
 import Homepage from './page/Homepage';
-import Recoverpwpage from './page/recoverpwpage';
-import Resetpw from './page/resetpwpage';
-import Artisthomepage from './page/artisthomepage';
 import Createpage from './page/createpage';
 import Userpfpage from './page/userpfpage';
 import { AuthContextProvider } from './context/AuthContext';
@@ -25,8 +22,6 @@ function App() {
                     <Route path='/login' element={<Login />} />
                     <Route path='/signup' element={<Signup />} />
                     <Route path='/homepage' element={<ProtectedRoute><Homepage /></ProtectedRoute>} />
-                    <Route path='/recoverpw' element={<Recoverpwpage />} />
-                    <Route path='/resetpw' element={<Resetpw />} />
                     <Route path='/createpage' element={<ProtectedRoute><Createpage /></ProtectedRoute>} />
                     <Route path='/userpfpage' element={<ProtectedRoute><Userpfpage /></ProtectedRoute>} />
                 </Routes>
