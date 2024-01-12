@@ -100,15 +100,39 @@ function Userpfpage() {
     }
   }, [user, activeTab]);
 
+  // const handleSavedChanges = async (inputData) => {
+  //   console.log(inputData.id);
+  //   onSnapshot(doc(db, 'users', user.uid)).then((userData) => {
+  //     const updatePosts = userData.data().savePosts;
+  //     const index = updatePosts.findIndex((post) => post === inputData.id);
+  //     updatePosts.splice(index, 1);
+  //     setDoc(doc(db, 'users', user.uid), { ...userData.data(), savePosts: updatePosts });
+  //   });
+  // };
   const handleSavedChanges = async (inputData) => {
-    console.log(inputData.id);
-    onSnapshot(doc(db, 'users', user.uid)).then((userData) => {
-      const updatePosts = userData.data().savePosts;
-      const index = updatePosts.findIndex((post) => post === inputData.id);
-      updatePosts.splice(index, 1);
-      setDoc(doc(db, 'users', user.uid), { ...userData.data(), savePosts: updatePosts });
-    });
+    try {
+      const userDocRef = doc(db, 'users', user.uid);
+      const userData = await getDoc(userDocRef);
+  
+      if (userData.exists()) {
+        const updatePosts = userData.data().savePosts;
+        const index = updatePosts.findIndex((post) => post === inputData.id);
+  
+        if (index !== -1) {
+          updatePosts.splice(index, 1);
+          await setDoc(userDocRef, { ...userData.data(), savePosts: updatePosts });
+          Swal.fire('Unsaved!', 'The image has been unsaved.', 'success');
+        } else {
+          console.log('Post not found in savePosts array');
+        }
+      } else {
+        console.log('User document does not exist');
+      }
+    } catch (error) {
+      console.error('Error updating savePosts:', error);
+    }
   };
+  
 
   return (
     <HomepageLayout>

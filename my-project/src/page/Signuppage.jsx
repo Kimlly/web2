@@ -204,12 +204,11 @@ function Signup() {
                       id='userMode'
                       aria-describedby='artistMode1'
                       type='radio'  // Change this line to use radio button
-                      name='artistMode'
                       className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800'
                       required
                     />
                     <div className='ml-3 text-sm'>
-                      <label htmlFor='artistMode1' className=' font-medium dark:text-white'>
+                      <label className=' font-medium dark:text-white'>
                         User Mode (Cannot Create the Post)
                       </label>
                     </div>
@@ -222,12 +221,11 @@ function Signup() {
                       id='artistMode'
                       aria-describedby='artistMode2'
                       type='radio'  // Change this line to use radio button
-                      name='artistMode'
                       className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800'
                       required
                     />
                     <div className='ml-3 text-sm'>
-                      <label htmlFor='artistMode2' className='font-medium dark:text-white'>
+                      <label className='font-medium dark:text-white'>
                         Artist Mode (Can Create the Post)
                       </label>
                     </div>
