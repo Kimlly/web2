@@ -225,33 +225,36 @@ function Card({ data }) {
           </svg>
           Share
         </button>
-        <button
-          type='button'
-          onClick={(e) => handleSavePost(e)}
-          className={cn(
-            'inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white',
-            {
-              'bg-blue-700 text-white dark:bg-blue-700': isSaved,
-            }
-          )}
-        >
-          <svg
-            className='h-6 w-6 text-gray-800 dark:text-white'
-            aria-hidden='true'
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 14 20'
+
+        {!user.posts.includes(data.id) && (
+          <button
+            type='button'
+            onClick={(e) => handleSavePost(e)}
+            className={cn(
+              'inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white',
+              {
+                'bg-blue-700 text-white dark:bg-blue-700': isSaved,
+              }
+            )}
           >
-            <path
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              d='m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z'
-            />
-          </svg>
-          {isSaved ? 'Saved' : 'Save'}
-        </button>
+            <svg
+              className='h-6 w-6 text-gray-800 dark:text-white'
+              aria-hidden='true'
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 14 20'
+            >
+              <path
+                stroke='currentColor'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z'
+              />
+            </svg>
+            {isSaved ? 'Saved' : 'Save'}
+          </button>
+        )}
         <button
           type='button'
           className='inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white'
