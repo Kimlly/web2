@@ -155,21 +155,21 @@ function Card({ data }) {
         </p>
       </div>
       <div className='flex -space-x-3.5 rtl:space-x-reverse '>
-        {data.likes.map((like) => (
+        {data.likes?.slice(0, 3)?.map((like) => (
           <img
             key={like.uid + 'a'}
-            className='w-6 h-6 border-2 border-white rounded-full dark:border-gray-800'
+            className='w-6 h-6 border-2 object-cover border-white rounded-full dark:border-gray-800'
             src={like.pfImgURL}
             alt=''
           />
         ))}
 
-        {data.likes.length >= 3 && (
+        {data.likes.length > 3 && (
           <a
             className='flex items-center justify-center w-auto h-6 px-1 text-xs text-white bg-gray-700 border-2 border-white rounded-full hover:bg-gray-600 dark:border-gray-800'
             href='#'
           >
-            {data.likes.length - 2}+
+            {data.likes.length - 3}+
           </a>
         )}
       </div>
