@@ -1,43 +1,4 @@
-// import React, { useState, useEffect } from 'react';
-// import { UserAuth } from '../context/AuthContext';
-// import { auth, db } from '../authentication/firebase';
-
-function Modal({ visible, onClose,user }) {
-  
-    // const [newUsername, setNewUsername] = useState('');
-    // const [newInfo, setNewInfo] = useState('');
-  
-    // const auth = UserAuth(); // Replace with your actual authentication hook
-  
-    // useEffect(() => {
-    //   // Fetch user details when the component mounts
-    //   const user = auth.currentUser;
-    //   if (user) {
-    //     setNewUsername(user.newUsername || '');
-    //     setNewInfo(user.newInfo || '');
-    //   }
-    // }, [auth]);
-
-    // const handleUpdateProfile = async () => {
-    //   try {
-    //     const user = auth.currentUser;
-  
-    //     // Update display name
-    //     await user.updateUsername({
-    //       newUsername: newUsername,
-    //     });
-  
-    //     // Update email
-    //     await user.updateInfo(newInfo);
-  
-  
-    //     // You can add more fields and update logic as needed
-  
-    //     alert('Profile updated successfully!');
-    //   } catch (error) {
-    //     console.error('Error updating profile: ', error.message);
-    //   }
-    // };
+function Modal({ visible, onClose }) {
   
   if (!visible) return null;
   return (
@@ -82,8 +43,6 @@ function Modal({ visible, onClose,user }) {
                     type='text'
                     id='username'
                     placeholder=''
-                    // value={newUsername}
-                    // onChange={(e) => setNewUsername(e.target.value)}
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                     required
                   />
@@ -99,8 +58,6 @@ function Modal({ visible, onClose,user }) {
                     id='about'
                     name='about'
                     rows='3'
-                    // value={newInfo}
-                    // onChange={(e) => setNewInfo(e.target.value)}
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                   ></textarea>
                 </div>
@@ -113,12 +70,8 @@ function Modal({ visible, onClose,user }) {
                 <button onClick={onClose} type='button' className='text-sm font-semibold leading-6 text-gray-900'>
                   Close
                 </button>
-                <button type='button' className='text-sm font-semibold leading-6 text-gray-900'>
-                  Cancel
-                </button>
                 <button
                   type='submit'
-                  // onClick={handleUpdateProfile}
                   className='rounded-md bg-blue-500 text-white hover:bg-blue-600 px-3 py-2 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                 >
                   Save change

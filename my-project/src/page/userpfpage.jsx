@@ -7,6 +7,7 @@ import Modal from '../component/modal';
 import { UserAuth } from '../context/AuthContext';
 import HomepageLayout from '../layout/HomepageLayout';
 import cn from '../utils/cn';
+import Swal from 'sweetalert2';
 
 function Userpfpage() {
   const { user, logout } = UserAuth();
@@ -18,6 +19,24 @@ function Userpfpage() {
   const [activeTab, setActiveTab] = useState('created');
 
   const handleOnClose = () => setShowModal(false);
+
+  const handleDelete = () => {
+    // Display SweetAlert confirmation dialog
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to restore this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Handle delete action here (e.g., call delete API)
+        Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+      }
+    });
+  };
 
   const userSignOut = () => {
     logout();
@@ -150,6 +169,7 @@ function Userpfpage() {
                   </button>
                   <button
                     type='button'
+                    onClick={()=>handleDelete(item)}
                     className='inline-flex items-center rounded-r-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
                   >
                     Delete
