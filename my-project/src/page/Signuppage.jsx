@@ -1,19 +1,18 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import React, { useState } from 'react';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { auth, db, storage } from '../authentication/firebase';
-import { UserAuth } from '../context/AuthContext';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { v4 } from 'uuid';
+import { auth, db, storage } from '../authentication/firebase';
 
 function Signup() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [cfpassword, setCfPassword] = useState('');
-  const [info,setInfo]=useState('')
+  const [info, setInfo] = useState('');
   const [validation, setValidation] = useState(true);
 
   const [profileImgURL, setProfileImgURL] = useState('');
@@ -23,9 +22,9 @@ function Signup() {
 
   const signUp = async (e) => {
     e.preventDefault();
-     
+
     // Check if password and confirm password match
-     if (password !== cfpassword) {
+    if (password !== cfpassword) {
       setValidation(false);
       return;
     }
@@ -46,22 +45,22 @@ function Signup() {
       createdAt: new Date(Date.now()).toISOString(),
     };
 
-    createUserWithEmailAndPassword(auth, email, password, cfpassword,info)
+    createUserWithEmailAndPassword(auth, email, password, cfpassword, info)
       .then(async (userCredential) => {
         console.log(userCredential.user.uid);
 
         await setDoc(doc(db, 'users', userCredential.user.uid), inputData);
 
-         // Only navigate to homepage when passwords match
-         if (password === cfpassword) {
+        // Only navigate to homepage when passwords match
+        if (password === cfpassword) {
           Swal.fire({
-          title: 'Create Account Successfully',
-          icon: 'success',
-          confirmButtonText: 'OK',
-        });
+            title: 'Create Account Successfully',
+            icon: 'success',
+            confirmButtonText: 'OK',
+          });
           navigate('/homepage');
         }
-        
+
         // navigate('/homepage');
       })
       .catch(() => {
@@ -77,7 +76,6 @@ function Signup() {
       setValidation(true);
     } else {
       setValidation(false);
-      
     }
     console.log(validation);
   }
@@ -190,7 +188,8 @@ function Signup() {
                     id='info'
                     placeholder='Write something about yourself'
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                  required></textarea>
+                    required
+                  ></textarea>
                 </div>
               </div>
 
@@ -222,15 +221,16 @@ function Signup() {
               >
                 Create an account{' '}
               </button>
-              {validation?'':(
+              {validation ? (
+                ''
+              ) : (
                 <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
-                Already have an account?{' '}
-                <Link to='/login' className='font-medium text-primary-600 hover:underline dark:text-primary-500'>
-                  Login here
-                </Link>
-              </p>
+                  Already have an account?{' '}
+                  <Link to='/login' className='font-medium text-primary-600 hover:underline dark:text-primary-500'>
+                    Login here
+                  </Link>
+                </p>
               )}
-              
             </form>
           </div>
         </div>

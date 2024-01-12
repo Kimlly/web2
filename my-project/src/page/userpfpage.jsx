@@ -1,13 +1,13 @@
 import { signOut } from 'firebase/auth';
-import { collection, doc, getDoc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { auth, db } from '../authentication/firebase';
 import Modal from '../component/modal';
 import { UserAuth } from '../context/AuthContext';
 import HomepageLayout from '../layout/HomepageLayout';
 import cn from '../utils/cn';
-import Swal from 'sweetalert2';
 
 function Userpfpage() {
   const { user, logout } = UserAuth();
@@ -20,20 +20,31 @@ function Userpfpage() {
 
   const handleOnClose = () => setShowModal(false);
 
-  const handleDelete = () => {
+  const handleDelete = (inputData) => {
     // Display SweetAlert confirmation dialog
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You won\'t be able to restore this!',
+      text: "You won't be able to restore this!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
         // Handle delete action here (e.g., call delete API)
-        Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+
+        const index = user.posts.findIndex((eachId) => eachId === inputData.id);
+
+        getDoc(doc(db, 'users', user.uid)).then((userData) => {
+          const updatePosts = userData.data().posts;
+          updatePosts.splice(index, 1);
+          setDoc(doc(db, 'users', user.uid), { ...userData.data(), posts: updatePosts });
+
+          deleteDoc(doc(db, 'posts', inputData.id)).then(() => {
+            Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+          });
+        });
       }
     });
   };
@@ -60,14 +71,11 @@ function Userpfpage() {
           await Promise.all(
             user.posts.map(async (postId) => {
               const docRef = doc(db, 'posts', postId);
-              const docSnap = await getDoc(docRef);
-
-              if (docSnap.exists()) {
-                const postData = { ...docSnap.data(), id: postId };
+              console.log(postId);
+              onSnapshot(docRef, (snapshot) => {
+                const postData = { ...snapshot.data(), id: postId };
                 setData((prevData) => [...prevData, postData]);
-              } else {
-                console.log('Document does not exist for post ID:', postId);
-              }
+              });
             })
           );
         } else if (activeTab === 'saved') {
@@ -94,7 +102,7 @@ function Userpfpage() {
 
   const handleSavedChanges = async (inputData) => {
     console.log(inputData.id);
-    getDoc(doc(db, 'users', user.uid)).then((userData) => {
+    onSnapshot(doc(db, 'users', user.uid)).then((userData) => {
       const updatePosts = userData.data().savePosts;
       const index = updatePosts.findIndex((post) => post === inputData.id);
       updatePosts.splice(index, 1);
@@ -104,7 +112,7 @@ function Userpfpage() {
 
   return (
     <HomepageLayout>
-      <Modal onClose={handleOnClose} visible={showModal} ></Modal>
+      <Modal onClose={handleOnClose} visible={showModal}></Modal>
 
       <div className='flex justify-center'>
         <div className='max-w-sm rounded p-5 text-center text-gray-500'>
@@ -169,7 +177,7 @@ function Userpfpage() {
                   </button>
                   <button
                     type='button'
-                    onClick={()=>handleDelete(item)}
+                    onClick={() => handleDelete(item)}
                     className='inline-flex items-center rounded-r-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
                   >
                     Delete

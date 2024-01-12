@@ -39,11 +39,7 @@ function Homepage() {
             }}
             className='group relative rounded-lg overflow-hidden bg-gray-300 hover:scale-105'
           >
-            <img
-              className='height={300} width={200}'
-              src={item.imageURL}
-              alt=''
-            />
+            <img className='height={300} width={200}' src={item.imageURL} alt='' />
           </div>
         ))}
       </div>
