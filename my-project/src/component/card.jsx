@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { db } from '../authentication/firebase';
 import cn from '../utils/cn';
@@ -11,6 +11,7 @@ function Card({ data }) {
   const [postOwner, setPostOwner] = useState({});
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(data.likes.length);
+  const [isSaved, setIsSaved] = useState(false);
 
   const [comment, setComment] = useState('');
 
@@ -23,11 +24,23 @@ function Card({ data }) {
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'posts', data.id), (doc) => {
       if (doc.data().likes.length > 0) {
-        setLiked(doc.data().likes.map((userLike) => userLike.uid === user.uid));
+        setLiked(doc.data().likes.find((userLike) => userLike.uid === user.uid));
         setLikeCount(doc.data().likes.length);
       } else {
         setLiked(false);
         setLikeCount(0);
+      }
+    });
+
+    return () => unsub;
+  }, []);
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'users', user.uid), (doc) => {
+      if (doc.data().savePosts.includes(data.id)) {
+        setIsSaved(true);
+      } else {
+        setIsSaved(false);
       }
     });
 
@@ -62,6 +75,31 @@ function Card({ data }) {
     }
   };
 
+  const handleSavePost = (e) => {
+    e.preventDefault();
+
+    console.log(data.id);
+    if (!isSaved) {
+      getDoc(doc(db, 'users', user.uid)).then((userData) => {
+        const updatePosts = userData.data().savePosts;
+        updatePosts.push(data.id);
+
+        setDoc(doc(db, 'users', user.uid), { ...userData.data(), savePosts: updatePosts });
+        setIsSaved(true);
+      });
+    } else {
+      getDoc(doc(db, 'users', user.uid)).then((userData) => {
+        const updatePosts = userData.data().savePosts;
+        const index = updatePosts.findIndex((post) => post === data.id);
+
+        updatePosts.splice(index, 1);
+
+        setDoc(doc(db, 'users', user.uid), { ...userData.data(), savePosts: updatePosts });
+      });
+      setIsSaved(false);
+    }
+  };
+
   const handleComment = (e) => {
     e.preventDefault();
 
@@ -90,7 +128,6 @@ function Card({ data }) {
       setComment('');
     });
   };
-
 
   return (
     <div className=' p-6 bg-white border border-gray-200 rounded-2xl shadow dark:bg-gray-800 dark:border-gray-700'>
@@ -190,7 +227,13 @@ function Card({ data }) {
         </button>
         <button
           type='button'
-          className='inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white'
+          onClick={(e) => handleSavePost(e)}
+          className={cn(
+            'inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white',
+            {
+              'bg-blue-700 text-white dark:bg-blue-700': isSaved,
+            }
+          )}
         >
           <svg
             className='h-6 w-6 text-gray-800 dark:text-white'
@@ -207,7 +250,7 @@ function Card({ data }) {
               d='m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z'
             />
           </svg>
-          Save
+          {isSaved ? 'Saved' : 'Save'}
         </button>
         <button
           type='button'

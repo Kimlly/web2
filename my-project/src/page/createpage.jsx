@@ -6,7 +6,7 @@ import { db, storage } from '../authentication/firebase';
 import HomepageLayout from '../layout/HomepageLayout';
 
 // ----------- import some firebase functions --------------
-import { addDoc, collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { UserAuth } from '../context/AuthContext';
 
@@ -24,7 +24,7 @@ const CreatePost = () => {
 
   const [uploading, setUploading] = useState(false);
 
-  const [imgURL, setImgURL] = useState([]);
+  // const [imgURL, setImgURL] = useState([]);
 
   const onSubmit = async (e) => {
     e.preventDefault();

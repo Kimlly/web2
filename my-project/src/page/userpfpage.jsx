@@ -1,11 +1,12 @@
 import { signOut } from 'firebase/auth';
-import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { auth, db } from '../authentication/firebase';
 import Modal from '../component/modal';
 import { UserAuth } from '../context/AuthContext';
 import HomepageLayout from '../layout/HomepageLayout';
+import cn from '../utils/cn';
 
 function Userpfpage() {
   const { user, logout } = UserAuth();
@@ -13,6 +14,8 @@ function Userpfpage() {
 
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  const [activeTab, setActiveTab] = useState('created');
 
   const handleOnClose = () => setShowModal(false);
 
@@ -33,35 +36,60 @@ function Userpfpage() {
         //Reset
         setData([]);
 
-        // user is an object with a property 'posts' which is an array of post IDs
-        await Promise.all(
-          user.posts.map(async (postId) => {
-            const docRef = doc(db, 'posts', postId);
-            const docSnap = await getDoc(docRef);
+        if (activeTab === 'created') {
+          // user is an object with a property 'posts' which is an array of post IDs
+          await Promise.all(
+            user.posts.map(async (postId) => {
+              const docRef = doc(db, 'posts', postId);
+              const docSnap = await getDoc(docRef);
 
-            if (docSnap.exists()) {
-              const postData = { ...docSnap.data(), id: postId };
-              setData((prevData) => [...prevData, postData]);
-            } else {
-              console.log('Document does not exist for post ID:', postId);
-            }
-          })
-        );
+              if (docSnap.exists()) {
+                const postData = { ...docSnap.data(), id: postId };
+                setData((prevData) => [...prevData, postData]);
+              } else {
+                console.log('Document does not exist for post ID:', postId);
+              }
+            })
+          );
+        } else if (activeTab === 'saved') {
+          await Promise.all(
+            user.savePosts.map(async (postId) => {
+              const docRef = doc(db, 'posts', postId);
+              const docSnap = await getDoc(docRef);
+
+              if (docSnap.exists()) {
+                const postData = { ...docSnap.data(), id: postId };
+                setData((prevData) => [...prevData, postData]);
+              } else {
+                console.log('Document does not exist for post ID:', postId);
+              }
+            })
+          );
+        }
       };
 
       // Call the async function
       fetchData();
     }
-  }, [user]);
-  
+  }, [user, activeTab]);
+
+  const handleSavedChanges = async (inputData) => {
+    console.log(inputData.id);
+    getDoc(doc(db, 'users', user.uid)).then((userData) => {
+      const updatePosts = userData.data().savePosts;
+      const index = updatePosts.findIndex((post) => post === inputData.id);
+      updatePosts.splice(index, 1);
+      setDoc(doc(db, 'users', user.uid), { ...userData.data(), savePosts: updatePosts });
+    });
+  };
 
   return (
     <HomepageLayout>
-      <Modal onClose={handleOnClose} visible={showModal} user={user} ></Modal>
+      <Modal onClose={handleOnClose} visible={showModal} user={user}></Modal>
 
       <div className='flex justify-center'>
         <div className='max-w-sm rounded p-5 text-center text-gray-500'>
-          <img className='mx-auto h-32 w-32 rounded-full' src={user.pfImgURL} alt=''  />
+          <img className='mx-auto h-32 w-32 rounded-full' src={user.pfImgURL} alt='' />
           <div className='mt-5'>
             <p className='text-xl font-semibold mb-1'>{user.username}</p>
             <a
@@ -87,33 +115,55 @@ function Userpfpage() {
 
       <div className='p-8' />
       <nav className='flex justify-center space-x-4'>
-        <Link to ='/userpfpage'  className='rounded-md px-3 py-2 text-black hover:bg-gray-200 hover:text-slate-900'>
+        <button
+          onClick={() => setActiveTab('created')}
+          className={cn('rounded-md px-3 py-2 text-black hover:bg-gray-200 hover:text-slate-900', {
+            underline: activeTab === 'created',
+          })}
+        >
           Created
-        </Link>
+        </button>
 
-        <a href='/team' className='rounded-md px-3 py-2 text-black hover:bg-gray-200 hover:text-slate-900'>
+        <button
+          onClick={() => setActiveTab('saved')}
+          className={cn('rounded-md px-3 py-2 text-black hover:bg-gray-200 hover:text-slate-900', {
+            underline: activeTab === 'saved',
+          })}
+        >
           Saved
-        </a>
+        </button>
       </nav>
       <div className='mx-auto  pt-2' />
 
-      <div className='columns-6 mx-auto space-y-2 space-x-2 px-3 md:px-5'>
+      <div className='columns-6 mx-auto mt-5 space-y-2 space-x-2 px-3 md:px-5'>
         {data.map((item, index) => (
           <div key={index} className='group relative rounded-lg overflow-hidden bg-gray-300 hover:scale-105'>
             <img className='height={300} width={200}' src={item.imageURL} alt='' />
             <div className='absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100'>
-              <button
-                type='button'
-                className='inline-flex items-center rounded-l-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
-              >
-                Edit
-              </button>
-              <button
-                type='button'
-                className='inline-flex items-center rounded-r-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
-              >
-                Delete
-              </button>
+              {activeTab === 'created' ? (
+                <>
+                  <button
+                    type='button'
+                    className='inline-flex items-center rounded-l-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type='button'
+                    className='inline-flex items-center rounded-r-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
+                  >
+                    Delete
+                  </button>
+                </>
+              ) : (
+                <button
+                  type='button'
+                  onClick={() => handleSavedChanges(item)}
+                  className='inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
+                >
+                  Unsave
+                </button>
+              )}
             </div>
           </div>
         ))}
