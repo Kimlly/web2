@@ -16,7 +16,7 @@ function Userpfpage() {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  const [activeTab, setActiveTab] = useState('created');
+  const [activeTab, setActiveTab] = useState(user.role === 'user' ? 'saved' : 'created');
 
   const handleOnClose = () => setShowModal(false);
 
@@ -142,7 +142,8 @@ function Userpfpage() {
 
       <div className='p-8' />
       <nav className='flex justify-center space-x-4'>
-        <button
+        {user.role==='artist' && (
+          <button
           onClick={() => setActiveTab('created')}
           className={cn('rounded-md px-3 py-2 text-black hover:bg-gray-200 hover:text-slate-900', {
             underline: activeTab === 'created',
@@ -150,6 +151,8 @@ function Userpfpage() {
         >
           Created
         </button>
+        )}
+        
 
         <button
           onClick={() => setActiveTab('saved')}

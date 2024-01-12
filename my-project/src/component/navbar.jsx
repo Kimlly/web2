@@ -77,7 +77,8 @@ function Navbar() {
                     Home
                   </NavLink>
                 </li>
-                <li>
+                {user.role === 'artist' && (
+                  <li>
                   <NavLink
                     to='/createpage'
                     activeclassname='text-blue-600' // Apply this class for the active link
@@ -86,7 +87,9 @@ function Navbar() {
                     Create
                   </NavLink>
                 </li>
-                <li>
+                
+                )}
+               <li>
                   <NavLink
                     to='/contact'
                     activeclassname='text-blue-600' // Apply this class for the active link
@@ -94,7 +97,7 @@ function Navbar() {
                   >
                     Contact
                   </NavLink>
-                </li>
+                </li> 
               </ul>
               <Link
                 to='/userpfpage'

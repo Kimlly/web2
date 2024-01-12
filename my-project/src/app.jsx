@@ -9,15 +9,27 @@ import Createpage from './page/createpage';
 import Userpfpage from './page/userpfpage';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './component/ProtectedRoute';
+import { useState,useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './authentication/firebase';
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <>
       <BrowserRouter>
         <AuthContextProvider>
           <Routes>
             <Route path='/' element={<Landingpage />} />
-            <Route path='/contact' element={<Contactpage />} />
             <Route path='/team' element={<Teampage />} />
             <Route path='/login' element={<Login />} />
             <Route path='/signup' element={<Signup />} />
@@ -30,9 +42,17 @@ function App() {
               }
             />
             <Route
+              path='/contact'
+              element={
+                <ProtectedRoute >
+                  <Contactpage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path='/createpage'
               element={
-                <ProtectedRoute>
+                <ProtectedRoute >
                   <Createpage />
                 </ProtectedRoute>
               }
@@ -40,7 +60,7 @@ function App() {
             <Route
               path='/userpfpage'
               element={
-                <ProtectedRoute>
+                <ProtectedRoute >
                   <Userpfpage />
                 </ProtectedRoute>
               }

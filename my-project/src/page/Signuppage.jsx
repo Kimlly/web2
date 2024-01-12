@@ -33,13 +33,16 @@ function Signup() {
 
     const data = await uploadBytes(fileRef, profileImgFile);
     const val = await getDownloadURL(data.ref);
+    
+    const isArtistModeChecked = document.getElementById('artistMode').checked;
+    const selectedRole = isArtistModeChecked ? 'artist' : 'user';
 
     const inputData = {
       username,
       email,
       info,
       pfImgURL: val,
-      role: 'user',
+      role: selectedRole,
       posts: [],
       savePosts: [],
       createdAt: new Date(Date.now()).toISOString(),
@@ -90,8 +93,8 @@ function Signup() {
   };
 
   return (
-    <section className='bg-gray-50 dark:bg-gray-900'>
-      <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
+    <section className='bg-gray-50 dark:bg-gray-900 '>
+      <div className='flex flex-col items-center  px-6 py-8 mx-auto md:h-screen lg:py-0'>
         <a href='#' className='flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white'>
           <img className='w-8 h-8 mr-2' src='https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg' alt='logo' />
           MΣЯΛKI
@@ -127,6 +130,7 @@ function Signup() {
                   placeholder='name'
                   required
                 />
+
               </div>
               <div>
                 <label htmlFor='email' className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>
@@ -191,27 +195,48 @@ function Signup() {
                     required
                   ></textarea>
                 </div>
+
+                <div>
+
+                  <div className='flex items-start' />
+                  <div className='flex items-center h-5'>
+                    <input
+                      id='userMode'
+                      aria-describedby='artistMode1'
+                      type='radio'  // Change this line to use radio button
+                      name='artistMode'
+                      className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800'
+                      required
+                    />
+                    <div className='ml-3 text-sm'>
+                      <label htmlFor='artistMode1' className=' font-medium dark:text-white'>
+                        User Mode (Cannot Create the Post)
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className='flex items-start '>
+                  <div className='flex items-center h-10 '>
+                    <input
+                      id='artistMode'
+                      aria-describedby='artistMode2'
+                      type='radio'  // Change this line to use radio button
+                      name='artistMode'
+                      className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800'
+                      required
+                    />
+                    <div className='ml-3 text-sm'>
+                      <label htmlFor='artistMode2' className='font-medium dark:text-white'>
+                        Artist Mode (Can Create the Post)
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
-              <div className='flex items-start'>
-                <div className='flex items-center h-5'>
-                  <input
-                    id='terms'
-                    aria-describedby='terms'
-                    type='checkbox'
-                    className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800'
-                    required
-                  />
-                </div>
-                <div className='ml-3 text-sm'>
-                  <label htmlFor='terms' className='font-light text-gray-500 dark:text-gray-300'>
-                    I accept the{' '}
-                    <a className='font-medium text-primary-600 hover:underline dark:text-primary-500' href='#'>
-                      Terms and Conditions
-                    </a>
-                  </label>
-                </div>
-              </div>
+
               <button
                 type='submit'
                 onClick={() => {
