@@ -1,7 +1,7 @@
 import { signOut } from 'firebase/auth';
 import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import { auth, db } from '../authentication/firebase';
 import Modal from '../component/modal';
 import { UserAuth } from '../context/AuthContext';
@@ -53,14 +53,15 @@ function Userpfpage() {
       fetchData();
     }
   }, [user]);
+  
 
   return (
     <HomepageLayout>
-      <Modal onClose={handleOnClose} visible={showModal}></Modal>
+      <Modal onClose={handleOnClose} visible={showModal} user={user} ></Modal>
 
       <div className='flex justify-center'>
         <div className='max-w-sm rounded p-5 text-center text-gray-500'>
-          <img className='mx-auto h-32 w-32 rounded-full' src={user.pfImgURL} alt='' />
+          <img className='mx-auto h-32 w-32 rounded-full' src={user.pfImgURL} alt=''  />
           <div className='mt-5'>
             <p className='text-xl font-semibold mb-1'>{user.username}</p>
             <a
@@ -86,9 +87,9 @@ function Userpfpage() {
 
       <div className='p-8' />
       <nav className='flex justify-center space-x-4'>
-        <a href='/dashboard' className='rounded-md px-3 py-2 text-black hover:bg-gray-200 hover:text-slate-900'>
+        <Link to ='/userpfpage'  className='rounded-md px-3 py-2 text-black hover:bg-gray-200 hover:text-slate-900'>
           Created
-        </a>
+        </Link>
 
         <a href='/team' className='rounded-md px-3 py-2 text-black hover:bg-gray-200 hover:text-slate-900'>
           Saved
