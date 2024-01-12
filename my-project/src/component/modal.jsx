@@ -1,4 +1,44 @@
-function Modal({ visible, onClose }) {
+// import React, { useState, useEffect } from 'react';
+// import { UserAuth } from '../context/AuthContext';
+// import { auth, db } from '../authentication/firebase';
+
+function Modal({ visible, onClose,user }) {
+  
+    // const [newUsername, setNewUsername] = useState('');
+    // const [newInfo, setNewInfo] = useState('');
+  
+    // const auth = UserAuth(); // Replace with your actual authentication hook
+  
+    // useEffect(() => {
+    //   // Fetch user details when the component mounts
+    //   const user = auth.currentUser;
+    //   if (user) {
+    //     setNewUsername(user.newUsername || '');
+    //     setNewInfo(user.newInfo || '');
+    //   }
+    // }, [auth]);
+
+    // const handleUpdateProfile = async () => {
+    //   try {
+    //     const user = auth.currentUser;
+  
+    //     // Update display name
+    //     await user.updateUsername({
+    //       newUsername: newUsername,
+    //     });
+  
+    //     // Update email
+    //     await user.updateInfo(newInfo);
+  
+  
+    //     // You can add more fields and update logic as needed
+  
+    //     alert('Profile updated successfully!');
+    //   } catch (error) {
+    //     console.error('Error updating profile: ', error.message);
+    //   }
+    // };
+  
   if (!visible) return null;
   return (
     <div className='fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-10'>
@@ -42,41 +82,13 @@ function Modal({ visible, onClose }) {
                     type='text'
                     id='username'
                     placeholder=''
+                    // value={newUsername}
+                    // onChange={(e) => setNewUsername(e.target.value)}
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                     required
                   />
                 </div>
               </div>
-              {/* <div className='mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6'>
-                <div className='sm:col-span-3'>
-                  <label htmlFor='first-name' className='block text-sm font-medium leading-6 text-gray-900'>
-                    First name
-                  </label>
-                  <div className='mt-2'>
-                    <input
-                      type='text'
-                      name='first-name'
-                      id='first-name'
-                      autoComplete='given-name'
-                      className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                    />
-                  </div>
-                </div>
-                <div className='sm:col-span-3'>
-                  <label htmlFor='last-name' className='block text-sm font-medium leading-6 text-gray-900'>
-                    Last name
-                  </label>
-                  <div className='mt-2'>
-                    <input
-                      type='text'
-                      name='last-name'
-                      id='last-name'
-                      autoComplete='family-name'
-                      className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                    />
-                  </div>
-                </div>
-              </div> */}
 
               <div className='py-5'>
                 <label htmlFor='about' className='block text-sm font-medium leading-6 text-gray-900'>
@@ -87,6 +99,8 @@ function Modal({ visible, onClose }) {
                     id='about'
                     name='about'
                     rows='3'
+                    // value={newInfo}
+                    // onChange={(e) => setNewInfo(e.target.value)}
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                   ></textarea>
                 </div>
@@ -104,6 +118,7 @@ function Modal({ visible, onClose }) {
                 </button>
                 <button
                   type='submit'
+                  // onClick={handleUpdateProfile}
                   className='rounded-md bg-blue-500 text-white hover:bg-blue-600 px-3 py-2 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                 >
                   Save change

@@ -85,7 +85,7 @@ function Userpfpage() {
 
   return (
     <HomepageLayout>
-      <Modal onClose={handleOnClose} visible={showModal} user={user}></Modal>
+      <Modal onClose={handleOnClose} visible={showModal} ></Modal>
 
       <div className='flex justify-center'>
         <div className='max-w-sm rounded p-5 text-center text-gray-500'>
