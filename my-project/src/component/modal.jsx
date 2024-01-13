@@ -1,20 +1,44 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { db } from '../authentication/firebase';
+import { UserAuth } from '../context/AuthContext';
 
 function Modal({ visible, onClose,userData,onSaveChanges }) {
+  const {user} = UserAuth();
   const [username, setUsername] = useState(userData.username)
   const [info, setInfo] = useState(userData.info)
+
+  useEffect(() => {
+    if (user && user.uid) {
+      const userDocRef = doc(db, 'users', user.uid);
+      getDoc(userDocRef)
+        .then((docSnap) => {
+          if (docSnap.exists()) {
+            console.log(docSnap.data());
+            setUsername(docSnap.data().username)
+            setInfo(docSnap.data().info)
+          } else {
+            console.log('User document does not exist');
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching user document:', error);
+        });
+    } else {
+      console.error('Invalid user object or user.id is undefined');
+    }
+  },[user])
+
 
   const handleSaveChanges = async (e) => {
       e.preventDefault();
       console.log(username, info);
 
-      const docRef = doc(db, "users", userData.id);
+      const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
       const newData = docSnap.data();
 
-      await setDoc(doc(db, 'users', userData.id), {...newData, username: username, info: info});
+      await setDoc(doc(db, 'users', user.uid), {...newData, username: username, info: info});
 
       console.log("saved");
       onSaveChanges();

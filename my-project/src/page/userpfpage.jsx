@@ -154,6 +154,9 @@ function Userpfpage() {
   };
 
   const handleSaveChangesInEditPf = () => {
+
+    console.log(user.uid);
+    // getDoc(doc(db, 'users', user.id))
     // Display success alert
     Swal.fire({
       title: 'Changes Saved Successfully',
