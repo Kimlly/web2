@@ -14,12 +14,15 @@ function Card({ data }) {
   const [isSaved, setIsSaved] = useState(false);
 
   const [comment, setComment] = useState('');
-
+  
+  // fetch and set the post owner's data from the Firestore database when the component mounts.
   useEffect(() => {
     getDoc(doc(db, 'users', data.postOwner.uid)).then((user) => {
       setPostOwner(user.data());
     });
   }, []);
+
+  //  subscribe to changes in the post's likes in the Firestore database.
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'posts', data.id), (doc) => {
