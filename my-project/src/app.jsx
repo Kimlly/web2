@@ -9,7 +9,7 @@ import Createpage from './page/createpage';
 import Userpfpage from './page/userpfpage';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './component/ProtectedRoute';
-import Sidebar from './component/sidebar';
+import Sidebar from './component/sideBar';
 import ManageUser from'./page/ManageUser';
 import Message from'./page/Message';
 import Report from'./page/Report';
