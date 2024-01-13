@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { auth, db } from '../authentication/firebase';
 import Modal from '../component/modal';
+import EditImage from '../component/editImage';
 import { UserAuth } from '../context/AuthContext';
 import HomepageLayout from '../layout/HomepageLayout';
 import cn from '../utils/cn';
@@ -15,10 +16,14 @@ function Userpfpage() {
 
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [editPf,setShowEditPf]=useState('')
+  const [showEditImage, setShowEditImage] = useState(false);
+  const [editingData, setEditingData] = useState('')
 
   const [activeTab, setActiveTab] = useState(user.role === 'user' ? 'saved' : 'created');
 
   const handleOnClose = () => setShowModal(false);
+  const handleClose = () => setShowEditImage(false);
 
   const handleDelete = (inputData) => {
     // Display SweetAlert confirmation dialog
@@ -63,22 +68,24 @@ function Userpfpage() {
     if (user.uid) {
       //Fetch only data that is posted by the user
       const fetchData = async () => {
-        //Reset
         setData([]);
+        //Reset
 
         if (activeTab === 'created') {
+         
           // user is an object with a property 'posts' which is an array of post IDs
           await Promise.all(
             user.posts.map(async (postId) => {
               const docRef = doc(db, 'posts', postId);
               console.log(postId);
-              onSnapshot(docRef, (snapshot) => {
-                const postData = { ...snapshot.data(), id: postId };
+              getDoc(docRef).then (res => {
+                const postData = { ...res.data(), id: postId };
                 setData((prevData) => [...prevData, postData]);
               });
             })
           );
         } else if (activeTab === 'saved') {
+     
           await Promise.all(
             user.savePosts.map(async (postId) => {
               const docRef = doc(db, 'posts', postId);
@@ -100,15 +107,6 @@ function Userpfpage() {
     }
   }, [user, activeTab]);
 
-  // const handleSavedChanges = async (inputData) => {
-  //   console.log(inputData.id);
-  //   onSnapshot(doc(db, 'users', user.uid)).then((userData) => {
-  //     const updatePosts = userData.data().savePosts;
-  //     const index = updatePosts.findIndex((post) => post === inputData.id);
-  //     updatePosts.splice(index, 1);
-  //     setDoc(doc(db, 'users', user.uid), { ...userData.data(), savePosts: updatePosts });
-  //   });
-  // };
   const handleSavedChanges = async (inputData) => {
     try {
       const userDocRef = doc(db, 'users', user.uid);
@@ -132,11 +130,46 @@ function Userpfpage() {
       console.error('Error updating savePosts:', error);
     }
   };
+
+  const handleEdit = (item) => {
+    setShowEditImage(true)
+    setEditingData(item)
+  }
+
+  const handleEditPf = (user) => {
+    setShowModal(true)
+    setShowEditPf(user)
+  }
+
+  const handleSaveChangesInEdit = () => {
+    // Display success alert
+    Swal.fire({
+      title: 'Changes Saved Successfully',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    });
+
+    // Optionally, you can navigate to a specific page after saving changes
+    navigate('/homepage');
+  };
+
+  const handleSaveChangesInEditPf = () => {
+    // Display success alert
+    Swal.fire({
+      title: 'Changes Saved Successfully',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    });
+
+    // Optionally, you can navigate to a specific page after saving changes
+    navigate('/homepage');
+  };
   
 
   return (
     <HomepageLayout>
-      <Modal onClose={handleOnClose} visible={showModal}></Modal>
+      <Modal onClose={handleOnClose} visible={showModal} userData={editPf} onSaveChanges={handleSaveChangesInEditPf}></Modal>
+      <EditImage onClose={handleClose} visible={showEditImage} itemData={editingData} onSaveChanges={handleSaveChangesInEdit}></EditImage>
 
       <div className='flex justify-center'>
         <div className='max-w-sm rounded p-5 text-center text-gray-500'>
@@ -156,7 +189,7 @@ function Userpfpage() {
       </div>
 
       <div className='flex justify-center gap-5'>
-        <button onClick={() => setShowModal(true)} className='rounded-full bg-gray-300 px-4 py-2 text-black hover:bg-gray-500'>
+        <button onClick={() => handleEditPf(user)} className='rounded-full bg-gray-300 px-4 py-2 text-black hover:bg-gray-500'>
           Edit profile
         </button>
         <button onClick={userSignOut} className='rounded-full bg-gray-300 px-4 py-2 text-black hover:bg-gray-500'>
@@ -198,6 +231,7 @@ function Userpfpage() {
                 <>
                   <button
                     type='button'
+                    onClick={() => handleEdit(item)}
                     className='inline-flex items-center rounded-l-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
                   >
                     Edit

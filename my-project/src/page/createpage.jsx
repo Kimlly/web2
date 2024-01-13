@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { v4 } from 'uuid';
 import { db, storage } from '../authentication/firebase';
@@ -9,9 +9,11 @@ import HomepageLayout from '../layout/HomepageLayout';
 import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { UserAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const CreatePost = () => {
   const { user } = UserAuth();
+  const navigate  = useNavigate();
   const [title, setTitle] = useState('');
   const [errorTitle, setErrorTitle] = useState('');
 
@@ -91,32 +93,8 @@ const CreatePost = () => {
       setUploading(false);
     });
 
-    // ----------- Done --------------
-
-    // getDocs(dbCollectionRef)
-    // .then((snapshot)=>{
-    //   let posts=[]
-    //   snapshot.docs.forEach((doc)=>{
-    //     posts.push({...doc.data(),id:doc.id})
-    //   })
-
-    //   console.log(posts)
-    // })
-    // .catch(err=>{
-    //   console.log(err.message)
-    // })
   };
 
-  // DELETE
-  // const deleteimg=document.querySelector('.delete')
-  // deleteimg.addEventListener('submit',(e)=>{
-  //   e.preventDefault()
-  //   const docRef=doc(storage,'posts',deleteimg.id.value)
-  //   deleteDoc(docRef)
-  //   .then(()=>{
-  //     deleteimg.reset()
-  //   })
-  // })
 
   const handleUploadImg = (e) => {
     e.preventDefault();
@@ -139,6 +117,14 @@ const CreatePost = () => {
   const cn = (...inputs) => {
     return twMerge(clsx(inputs));
   };
+  
+  useEffect(()=> {
+    
+    console.log(user.role);
+  if (user.role === "user") {
+    navigate('/');
+  }
+  },[user])
 
   return (
     <HomepageLayout>
