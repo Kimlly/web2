@@ -34,15 +34,15 @@ function Signup() {
     const data = await uploadBytes(fileRef, profileImgFile);
     const val = await getDownloadURL(data.ref);
     
-    const isArtistModeChecked = document.getElementById('artistMode').checked;
-    const selectedRole = isArtistModeChecked ? 'artist' : 'user';
+    // const isArtistModeChecked = document.getElementById('artistMode').checked;
+    // const selectedRole = isArtistModeChecked ? 'artist' : 'user';
 
     const inputData = {
       username,
       email,
       info,
       pfImgURL: val,
-      role: selectedRole,
+      // role: selectedRole,
       posts: [],
       savePosts: [],
       createdAt: new Date(Date.now()).toISOString(),
@@ -195,8 +195,7 @@ function Signup() {
                   ></textarea>
                 </div>
 
-                <div>
-
+                {/* <div>
                   <div className='flex items-start' />
                   <div className='flex items-center h-5'>
                     <input
@@ -229,7 +228,7 @@ function Signup() {
                       </label>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
               </div>
 
