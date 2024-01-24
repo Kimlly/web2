@@ -1,9 +1,8 @@
 import React from 'react'
 import AdminpageLayout from '../layout/AdminpageLayout'
-
-function ManageUser() {
+function AdminTable() {
   return (
-<AdminpageLayout>
+    <AdminpageLayout>
 <div class="bg-gray-900 p-4 sm:ml-64">
   <div class="rounded-lg border-2 border-dashed border-gray-200 p-4 dark:border-gray-700">
     <div class="w-full rounded-md bg-white p-8">
@@ -103,33 +102,7 @@ function ManageUser() {
                     </span>
                   </td>
                 </tr>
-                <tr>
-                  <td class="bg-white px-5 py-5 text-sm">
-                    <div class="flex items-center">
-                      <div class="h-10 w-10 flex-shrink-0">
-                        <img class="h-full w-full rounded-full" src="https://images.unsplash.com/photo-1522609925277-66fea332c575?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&h=160&w=160&q=80" alt="" />
-                      </div>
-                      <div class="ml-3">
-                        <p class="whitespace-no-wrap text-gray-900">Alonzo Cox</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="bg-white px-5 py-5 text-sm">
-                    <p class="whitespace-no-wrap text-gray-900">Admin</p>
-                  </td>
-                  <td class="bg-white px-5 py-5 text-sm">
-                    <p class="whitespace-no-wrap text-gray-900">Jan 18, 2020</p>
-                  </td>
-                  <td class="bg-white px-5 py-5 text-sm">
-                    <p class="whitespace-no-wrap text-gray-900">70</p>
-                  </td>
-                  <td class="bg-white px-5 py-5 text-sm">
-                    <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-red-900">
-                      <span aria-hidden class="absolute inset-0 rounded-full bg-red-200 opacity-50"></span>
-                      <span class="relative">Inactive</span>
-                    </span>
-                  </td>
-                </tr>
+                
               </tbody>
             </table>
             <div class="xs:flex-row xs:justify-between flex flex-col items-center border-t bg-white px-5 py-5">
@@ -151,4 +124,4 @@ function ManageUser() {
   )
 }
 
-export default ManageUser
+export default AdminTable

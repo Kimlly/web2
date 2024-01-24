@@ -1,7 +1,9 @@
 import React from 'react'
+import AdminpageLayout from '../layout/AdminpageLayout'
 
 function Message() {
   return (
+    <AdminpageLayout>
     <div><div class="bg-gray-900 p-4 sm:ml-64">
     <div class="rounded-lg border-2 border-dashed border-gray-200 p-4 dark:border-gray-700">
       <div class="flex items-start gap-2.5">
@@ -42,6 +44,7 @@ function Message() {
       
     </div>
   </div></div>
+  </AdminpageLayout>
   )
 }
 
