@@ -90,7 +90,7 @@ function Navbar() {
                 
                 )}
                <li>
-               {(user.role === 'user'|| user.role==="artist") && (
+               {(user.role === 'user') && (
                   <li>
                   <NavLink
                     to='/contact'
