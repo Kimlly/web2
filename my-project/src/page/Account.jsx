@@ -1,7 +1,7 @@
 import React from 'react'
 import AdminpageLayout from '../layout/AdminpageLayout'
 
-function ManageUser() {
+function Account() {
   return (
 <AdminpageLayout>
 <div class="bg-gray-900 p-4 sm:ml-64">
@@ -151,4 +151,4 @@ function ManageUser() {
   )
 }
 
-export default ManageUser
+export default Account

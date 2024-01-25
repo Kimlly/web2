@@ -10,13 +10,14 @@ import Userpfpage from './page/Userpfpage';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './component/ProtectedRoute';
 import Sidebar from './component/sideBar';
-import ManageUser from'./page/ManageUser';
-import Message from'./page/Message';
+import ManageUser from'./page/Account';
+import Inbox from './page/Inbox';
 import Report from'./page/Report';
 import Adminpage from './page/Adminpage';
 import AdminTable from './page/AdminTable';
 import UserTable from './page/UserTable';
 import ArtistTable from './page/ArtistTable';
+import Account from './page/Account';
 
 function App() {
 
@@ -85,15 +86,15 @@ function App() {
               path='/inbox'
               element={
                 <ProtectedRoute>
-                  <Message />
+                  <Inbox />
                 </ProtectedRoute>
               }
             />
             <Route
-              path='/manageuser'
+              path='/account'
               element={
                 <ProtectedRoute>
-                  <ManageUser />
+                  <Account />
                 </ProtectedRoute>
               }
             />

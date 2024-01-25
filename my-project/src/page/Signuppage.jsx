@@ -42,7 +42,7 @@ function Signup() {
       email,
       info,
       pfImgURL: val,
-      // role: selectedRole,
+      role: "user",
       posts: [],
       savePosts: [],
       createdAt: new Date(Date.now()).toISOString(),
@@ -68,7 +68,7 @@ function Signup() {
       })
       .catch(() => {
         Swal.fire({
-          title: 'Email address already exist ',
+          title: 'Email address already exist',
           icon: 'error',
           confirmButtonText: 'OK',
         });

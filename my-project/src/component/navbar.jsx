@@ -90,6 +90,8 @@ function Navbar() {
                 
                 )}
                <li>
+               {(user.role === 'user'|| user.role==="artist") && (
+                  <li>
                   <NavLink
                     to='/contact'
                     activeclassname='text-blue-600' // Apply this class for the active link
@@ -97,6 +99,23 @@ function Navbar() {
                   >
                     Contact
                   </NavLink>
+                </li>
+                
+                )}
+                </li> 
+                <li>
+                {user.role === 'admin' && (
+                  <li>
+                  <NavLink
+                    to='/adminpage'
+                    activeclassname='text-blue-600' // Apply this class for the active link
+                    className='block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700'
+                  >
+                    Dashboard
+                  </NavLink>
+                </li>
+                
+                )}
                 </li> 
               </ul>
               <Link
@@ -104,14 +123,6 @@ function Navbar() {
                 className='relative w-10 h-10 ml-10 border overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600'
               >
                 <img src={user.pfImgURL} alt={user.email} />
-                {/* <svg
-                  className='absolute w-12 h-12 text-gray-400 -left-1'
-                  fillRule='currentColor'
-                  viewBox='0 0 20 20'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path fillRule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clipRule='evenodd'></path>
-                </svg> */}
               </Link>
             </div>
 
