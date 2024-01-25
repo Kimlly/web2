@@ -10,14 +10,13 @@ import Userpfpage from './page/Userpfpage';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './component/ProtectedRoute';
 import Sidebar from './component/sideBar';
-import ManageUser from'./page/Account';
+import Account from'./page/Account';
 import Inbox from './page/Inbox';
 import Report from'./page/Report';
 import Adminpage from './page/Adminpage';
 import AdminTable from './page/AdminTable';
 import UserTable from './page/UserTable';
 import ArtistTable from './page/ArtistTable';
-import Account from './page/Account';
 
 function App() {
 
@@ -31,9 +30,6 @@ function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/signup' element={<Signup />} />
             <Route path='/sidebar' element={<Sidebar />} />
-            {/* <Route path='/report' element={<Report />} />
-            <Route path='/message' element={<Message />} />
-            <Route path='/manageuser' element={<ManageUser />} /> */}
             <Route
               path='/homepage'
               element={
