@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
-import Sidebar from '../component/sideBar';
-import Navbar from '../component/navbar';
-import { UserAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../component/navbar';
+import Sidebar from '../component/sideBar';
+import { UserAuth } from '../context/AuthContext';
+import { useEffect } from 'react';
 
-function AdminpageLayout({ children }) {
+const ArtistPageLayout = ({ children }) => {
   const { user } = UserAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
-      if (user.role !== 'admin') {
+      if (user.role !== 'artist') {
         navigate('/');
       }
     }
@@ -33,6 +33,6 @@ function AdminpageLayout({ children }) {
       </div>
     </>
   );
-}
+};
 
-export default AdminpageLayout;
+export default ArtistPageLayout;

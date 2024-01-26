@@ -10,16 +10,15 @@ import Userpfpage from './page/Userpfpage';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './component/ProtectedRoute';
 import Sidebar from './component/sideBar';
-import Account from'./page/Account';
+import Account from './page/Account';
 import Inbox from './page/Inbox';
-import Report from'./page/Report';
+import Report from './page/Report';
 import Adminpage from './page/Adminpage';
 import AdminTable from './page/AdminTable';
 import UserTable from './page/UserTable';
 import ArtistTable from './page/ArtistTable';
 
 function App() {
-
   return (
     <>
       <BrowserRouter>
@@ -97,7 +96,7 @@ function App() {
             <Route
               path='/contact'
               element={
-                <ProtectedRoute >
+                <ProtectedRoute>
                   <Contactpage />
                 </ProtectedRoute>
               }
@@ -105,7 +104,7 @@ function App() {
             <Route
               path='/createpage'
               element={
-                <ProtectedRoute >
+                <ProtectedRoute>
                   <Createpage />
                 </ProtectedRoute>
               }
@@ -113,7 +112,7 @@ function App() {
             <Route
               path='/userpfpage'
               element={
-                <ProtectedRoute >
+                <ProtectedRoute>
                   <Userpfpage />
                 </ProtectedRoute>
               }

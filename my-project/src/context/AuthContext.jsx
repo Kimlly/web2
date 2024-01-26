@@ -8,6 +8,7 @@ const UserContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState('');
+  const [userFirebase, setUserFirebase] = useState('');
 
   const createUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -23,6 +24,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
+        setUserFirebase(currentUser);
         onSnapshot(doc(db, 'users', currentUser?.uid), (doc) => {
           console.log('Current user: ', doc.data());
           setUser({ ...doc.data(), uid: currentUser.uid });
@@ -34,7 +36,7 @@ export const AuthContextProvider = ({ children }) => {
     };
   }, []);
 
-  return <UserContext.Provider value={{ createUser, user, logout, signIn }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ createUser, user, logout, signIn, userFirebase }}>{children}</UserContext.Provider>;
 };
 export const UserAuth = () => {
   return useContext(UserContext);

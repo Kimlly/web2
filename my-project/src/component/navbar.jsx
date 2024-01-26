@@ -79,44 +79,39 @@ function Navbar() {
                 </li>
                 {user.role === 'artist' && (
                   <li>
-                  <NavLink
-                    to='/createpage'
-                    activeclassname='text-blue-600' // Apply this class for the active link
-                    className='block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700'
-                  >
-                    Create
-                  </NavLink>
-                </li>
-                
+                    <NavLink
+                      to='/createpage'
+                      activeclassname='text-blue-600' // Apply this class for the active link
+                      className='block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700'
+                    >
+                      Create
+                    </NavLink>
+                  </li>
                 )}
-               <li>
-               {(user.role === 'user') && (
-                  <li>
-                  <NavLink
-                    to='/contact'
-                    activeclassname='text-blue-600' // Apply this class for the active link
-                    className='block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700'
-                  >
-                    Contact
-                  </NavLink>
-                </li>
-                
-                )}
-                </li> 
                 <li>
-                {user.role === 'admin' && (
-                  <li>
-                  <NavLink
-                    to='/adminpage'
-                    activeclassname='text-blue-600' // Apply this class for the active link
-                    className='block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700'
-                  >
-                    Dashboard
-                  </NavLink>
+                  {user.role === 'user' && (
+                    <NavLink
+                      to='/contact'
+                      activeclassname='text-blue-600' // Apply this class for the active link
+                      className='block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700'
+                    >
+                      Contact
+                    </NavLink>
+                  )}
                 </li>
-                
-                )}
-                </li> 
+                <li>
+                  {user.role === 'admin' && (
+                    <li>
+                      <NavLink
+                        to='/adminpage'
+                        activeclassname='text-blue-600' // Apply this class for the active link
+                        className='block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700'
+                      >
+                        Dashboard
+                      </NavLink>
+                    </li>
+                  )}
+                </li>
               </ul>
               <Link
                 to='/userpfpage'
