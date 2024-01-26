@@ -26,11 +26,7 @@ const ArtistPageLayout = ({ children }) => {
 
   return (
     <>
-      <div className='flex flex-col'>
-        <Navbar />
-        {children}
-        <Sidebar />
-      </div>
+      <div className='flex flex-col'>{children}</div>
     </>
   );
 };
