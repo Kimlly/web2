@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { db } from '../authentication/firebase';
 import cn from '../utils/cn';
 import { UserAuth } from '../context/AuthContext';
+import Swal from 'sweetalert2';
 
 function Card({ data }) {
   const { user } = UserAuth();
@@ -132,10 +133,33 @@ function Card({ data }) {
       setComment('');
     });
   };
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
   const [isDropDownDotsOpen, setIsDropDownDotsOpen] = useState(false);
   // Function to toggle the dropdown state
-  const dotsDropdown = () => {
-    setIsDropDownDotsOpen(!isDropDownDotsOpen);
+  const dotsDropdown = (index) => {
+    setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
+
+  const handleDeleteComment = (commentIndex) => {
+    // Show confirmation alert using SweetAlert2
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If confirmed, update the state to remove the comment from the card
+        const updatedComments = [...data.comments];
+        updatedComments.splice(commentIndex, 1);
+        setDoc(doc(db, 'posts', data.id), { ...data, comments: updatedComments });
+
+        Swal.fire('Deleted!', 'Your comment has been deleted.', 'success');
+      }
+    });
   };
 
   return (
@@ -326,20 +350,46 @@ function Card({ data }) {
                     
                   </div>
                   
-                  <button id="dropdownMenuIconButton" onClick={dotsDropdown} data-dropdown-toggle="dropdownDots" data-dropdown-placement="bottom-start" class="inline-flex items-center self-center rounded-lg bg-white p-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800 dark:focus:ring-gray-600" type="button">
-          <svg class="h-4 w-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-            <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-          </svg>
-        </button>
-        <div id="dropdownDots" className={`py-2 space-y-2    ${isDropDownDotsOpen ? '' : 'hidden'}`} class="z-10 hidden w-40 divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700">
-          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-            <li>
-              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
-            </li>
-            
-            
-          </ul>
-        </div>
+                  {user.role === 'artist' && (
+            <>
+              <button
+                id={`dropdownMenuIconButton_${index}`}
+                onClick={() => dotsDropdown(index)}
+                data-dropdown-toggle="dropdownDots"
+                data-dropdown-placement="bottom-start"
+                className="inline-flex items-center self-center rounded-lg bg-white p-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800 dark:focus:ring-gray-600"
+                type="button"
+              >
+                <svg
+                  className="h-4 w-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 4 15"
+                >
+                  <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                </svg>
+              </button>
+              <div
+                id={`dropdownDots_${index}`}
+                className={`py-2 space-y-2 ${openDropdownIndex === index ? '' : 'hidden'}`}
+                class="z-10 hidden w-40 divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700"
+              >
+                <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby={`dropdownMenuIconButton_${index}`}>
+                  <li>
+                    <a href="#" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDeleteComment(index);
+                    }}
+                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                      Delete
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </>
+          )}
                 </div>
                 <p className='text-gray-800 dark:text-white opacity-70 text-sm mt-3'>{comment.comment}</p>
               </div>

@@ -63,8 +63,6 @@ function Signup() {
           });
           navigate('/homepage');
         }
-
-        // navigate('/homepage');
       })
       .catch(() => {
         Swal.fire({
