@@ -17,7 +17,6 @@ function Report() {
         // Perform delete action here
         Swal.fire('Deleted!', `${artistName}'s art has been deleted.`, 'success');
         // Show additional alert
-        alert(`${artistName}'s art has been deleted.`);
       }
     });
   };
