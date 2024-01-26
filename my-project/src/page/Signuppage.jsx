@@ -17,11 +17,15 @@ function Signup() {
 
   const [profileImgURL, setProfileImgURL] = useState('');
   const [profileImgFile, setProfileImgFile] = useState();
+  const[isSubmitting,setIsSubmitting]=useState(false);
 
   const navigate = useNavigate();
 
   const signUp = async (e) => {
     e.preventDefault();
+
+     // Disable the button to prevent multiple submissions
+     setIsSubmitting(true);
 
     // Check if password and confirm password match
     if (password !== cfpassword) {
@@ -70,7 +74,11 @@ function Signup() {
           icon: 'error',
           confirmButtonText: 'OK',
         });
+      }).finally(() => {
+        // Enable the button after the submission is complete
+        setIsSubmitting(false);
       });
+      
   };
   function validate(cfpassword, password) {
     if (cfpassword == password) {
@@ -193,40 +201,6 @@ function Signup() {
                   ></textarea>
                 </div>
 
-                {/* <div>
-                  <div className='flex items-start' />
-                  <div className='flex items-center h-5'>
-                    <input
-                      id='userMode'
-                      aria-describedby='artistMode1'
-                      type='radio'  // Change this line to use radio button
-                      className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800'
-                      required
-                    />
-                    <div className='ml-3 text-sm'>
-                      <label className=' font-medium dark:text-white'>
-                        User Mode (Cannot Create the Post)
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className='flex items-start '>
-                  <div className='flex items-center h-10 '>
-                    <input
-                      id='artistMode'
-                      aria-describedby='artistMode2'
-                      type='radio'  // Change this line to use radio button
-                      className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800'
-                      required
-                    />
-                    <div className='ml-3 text-sm'>
-                      <label className='font-medium dark:text-white'>
-                        Artist Mode (Can Create the Post)
-                      </label>
-                    </div>
-                  </div>
-                </div> */}
 
               </div>
 
@@ -236,9 +210,10 @@ function Signup() {
                 onClick={() => {
                   validate(cfpassword, password);
                 }}
+                disabled={isSubmitting} // Disable the button if isSubmitting is true
                 className='w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
               >
-                Create an account{' '}
+                 {isSubmitting ? 'Creating account...' : 'Create an account'}
               </button>
               {validation ? (
                 ''

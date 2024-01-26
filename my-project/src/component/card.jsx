@@ -350,7 +350,7 @@ function Card({ data }) {
                     
                   </div>
                   
-                  {user.role === 'artist' && (
+                  {user.uid === data.postOwner.uid && (
             <>
               <button
                 id={`dropdownMenuIconButton_${index}`}
