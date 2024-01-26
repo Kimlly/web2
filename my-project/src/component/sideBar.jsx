@@ -1,8 +1,13 @@
 import React,{useState} from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink,useNavigate } from 'react-router-dom'
 import { auth } from '../authentication/firebase';
+import { signOut } from 'firebase/auth';
+import { UserAuth } from '../context/AuthContext';
+
 
 function Sidebar() {
+  const { user, logout } = UserAuth();
+  const navigate = useNavigate();
   // State to manage the visibility of the dropdown
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -10,9 +15,7 @@ function Sidebar() {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
-
-  const adminSignOut = () => {
+  const userSignOut = () => {
     logout();
     signOut(auth)
       .then(() => {
@@ -20,6 +23,7 @@ function Sidebar() {
       })
       .catch((error) => console.log(error));
   };
+
   return (
     <>
       <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" class="ms-3 mt-2 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 sm:hidden dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -67,6 +71,7 @@ function Sidebar() {
                   <path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
                 </svg>
                 <span className="ms-3">Inbox</span>
+                <span class="ms-3 inline-flex h-3 w-3 items-center justify-center rounded-full bg-blue-100 p-3 text-sm font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300">3</span>
               </NavLink>
             </li>
             <li>
@@ -99,8 +104,7 @@ function Sidebar() {
          </li>
             <li>
               <NavLink
-
-                onClick={adminSignOut}
+                onClick={userSignOut}
                 className="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
               >
                 <svg

@@ -1,8 +1,9 @@
 import React,{ useEffect, useState } from 'react'
 import AdminpageLayout from '../layout/AdminpageLayout'
-import { onSnapshot, collection,query, where } from 'firebase/firestore';
+import { onSnapshot, collection,query, where,deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../authentication/firebase';
 import { UserAuth } from '../context/AuthContext';
+import Swal from 'sweetalert2';
 
 function UserTable() {
   const [users, setUsers] = useState([]);
@@ -25,6 +26,34 @@ function UserTable() {
     return () => unsubscribe();
   }, []); // useEffect dependency array is empty, so it runs once on component mount
   
+  const handleDelete = async (userData) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to restore this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Delete user from Firestore
+          await deleteDoc(doc(db, 'users', userData.id));
+  
+          // Delete user from Firebase Authentication
+          const userAuth = await auth.getUserByEmail(userData.email);
+          await auth.deleteUser(userAuth.uid);
+  
+          Swal.fire('Deleted!', 'User has been deleted.', 'success');
+        } catch (error) {
+          console.error('Error deleting user:', error);
+          Swal.fire('Error', 'Failed to delete user.', 'error');
+        }
+      }
+    });
+  };
+  
   return (
     <AdminpageLayout>
 <div class="bg-gray-900 p-4 sm:ml-64">
@@ -39,7 +68,6 @@ function UserTable() {
                   <th class="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Name</th>
                   <th class="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Gmail</th>
                   <th class="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Created at</th>
-                  <th class="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Saved</th>
                   <th class="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Status</th>
                 </tr>
               </thead>
@@ -63,13 +91,7 @@ function UserTable() {
                     <p class="whitespace-no-wrap text-gray-900">{user.createdAt}</p>
                   </td>
                   <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p class="whitespace-no-wrap text-gray-900">43</p>
-                  </td>
-                  <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-green-900">
-                      <span aria-hidden class="absolute inset-0 rounded-full bg-green-200 opacity-50"></span>
-                      <span class="relative">Activo</span>
-                    </span>
+                  <button  onClick={() => handleDelete(user)} type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
                   </td>
                 </tr>
                 ))}                

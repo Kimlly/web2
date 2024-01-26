@@ -6,7 +6,6 @@ import { UserAuth } from '../context/AuthContext';
 
 function Contactpage() {
   const {user}=UserAuth();
-  const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
 
   const handleSubmit = async (event) => {
@@ -16,14 +15,12 @@ function Contactpage() {
       // Add a new document to the "requests" collection
       const newRequest = await addDoc(collection(db, 'requests'), {
         user,
-        email,
         description,
       });
 
       console.log('Document written with ID: ', newRequest.id);
 
       // Clear the form after submission
-      setEmail('');
       setDescription('');
     } catch (error) {
       console.error('Error adding document: ', error);
@@ -39,20 +36,7 @@ function Contactpage() {
             Got a technical issue? Want to send feedback about a beta feature? Need details about our Business plan? Let us know.
           </p>
           <form onSubmit={handleSubmit} className="space-y-8">
-            <div>
-              <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Your email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
-                placeholder="name@meraki.com"
-                required
-              />
-            </div>
+            
             <div className="sm:col-span-2">
               <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">
                 Tell us briefly about yourself
