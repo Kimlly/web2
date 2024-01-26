@@ -3,9 +3,10 @@ import LandingLayout from '../layout/LandingLayout';
 import { db,auth } from '../authentication/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { UserAuth } from '../context/AuthContext';
+import Swal from 'sweetalert2';
 
 function Contactpage() {
-  const {user}=UserAuth();
+  const { user } = UserAuth();
   const [description, setDescription] = useState('');
 
   const handleSubmit = async (event) => {
@@ -20,10 +21,23 @@ function Contactpage() {
 
       console.log('Document written with ID: ', newRequest.id);
 
+      // Show success sweet alert
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Your message has been sent successfully.',
+      });
+
       // Clear the form after submission
       setDescription('');
     } catch (error) {
       console.error('Error adding document: ', error);
+      // Show error sweet alert
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong. Please try again later.',
+      });
     }
   };
 
@@ -33,7 +47,7 @@ function Contactpage() {
         <div className="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">Contact Us</h2>
           <p className="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-gray-400 sm:text-xl">
-            Got a technical issue? Want to send feedback about a beta feature? Need details about our Business plan? Let us know.
+             Want to request to be an artist? Let us know.
           </p>
           <form onSubmit={handleSubmit} className="space-y-8">
             

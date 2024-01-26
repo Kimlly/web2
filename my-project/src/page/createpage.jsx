@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import { v4 } from 'uuid';
 import { db, storage } from '../authentication/firebase';
 import HomepageLayout from '../layout/HomepageLayout';
+import Swal from 'sweetalert2';
 
 // ----------- import some firebase functions --------------
 import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore';
@@ -90,6 +91,16 @@ const CreatePost = () => {
 
         setDoc(doc(db, 'users', user.uid), { ...userData.data(), posts: updatePosts });
       });
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Your post has been submitted successfully.',
+      });
+      // Clear the form after submission
+      setTitle('');
+      setDescription('');
+      setImage('');
+      setFileImage('');
       setUploading(false);
     });
 
