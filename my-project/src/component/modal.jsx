@@ -1,8 +1,53 @@
-function Modal({ visible, onClose }) {
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react'
+import { db } from '../authentication/firebase';
+import { UserAuth } from '../context/AuthContext';
+
+function Modal({ visible, onClose,userData,onSaveChanges }) {
+  const {user} = UserAuth();
+  const [username, setUsername] = useState(userData.username)
+  const [info, setInfo] = useState(userData.info)
+
+  useEffect(() => {
+    if (user && user.uid) {
+      const userDocRef = doc(db, 'users', user.uid);
+      getDoc(userDocRef)
+        .then((docSnap) => {
+          if (docSnap.exists()) {
+            console.log(docSnap.data());
+            setUsername(docSnap.data().username)
+            setInfo(docSnap.data().info)
+          } else {
+            console.log('User document does not exist');
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching user document:', error);
+        });
+    } else {
+      console.error('Invalid user object or user.id is undefined');
+    }
+  },[user])
+
+
+  const handleSaveChanges = async (e) => {
+      e.preventDefault();
+      console.log(username, info);
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      const newData = docSnap.data();
+
+      await setDoc(doc(db, 'users', user.uid), {...newData, username: username, info: info});
+
+      console.log("saved");
+      onSaveChanges();
+  }
+  
   if (!visible) return null;
   return (
     <div className='fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-10'>
-      <form>
+      <form onSubmit={(e) => handleSaveChanges(e)}>
         <div className='bg-white p-3 rounded-3xl space-y-12 m-2 flex justify-center items-center'>
           <div className='w-max h-auto'>
             <h2 className='text-base font-semibold leading-7 text-gray-900'>Edit profile</h2>
@@ -33,34 +78,20 @@ function Modal({ visible, onClose }) {
             </div>
 
             <div className=''>
-              <div className='mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6'>
-                <div className='sm:col-span-3'>
-                  <label htmlFor='first-name' className='block text-sm font-medium leading-6 text-gray-900'>
-                    First name
-                  </label>
-                  <div className='mt-2'>
-                    <input
-                      type='text'
-                      name='first-name'
-                      id='first-name'
-                      autoComplete='given-name'
-                      className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                    />
-                  </div>
-                </div>
-                <div className='sm:col-span-3'>
-                  <label htmlFor='last-name' className='block text-sm font-medium leading-6 text-gray-900'>
-                    Last name
-                  </label>
-                  <div className='mt-2'>
-                    <input
-                      type='text'
-                      name='last-name'
-                      id='last-name'
-                      autoComplete='family-name'
-                      className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                    />
-                  </div>
+              <div className='pb-5'>
+                <label htmlFor='username' className='block text-sm font-medium leading-6 text-gray-900'>
+                  Username
+                </label>
+                <div className='mt-2'>
+                  <input
+                    type='text'
+                    id='username'
+                    placeholder=''
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                    required
+                  />
                 </div>
               </div>
 
@@ -73,35 +104,23 @@ function Modal({ visible, onClose }) {
                     id='about'
                     name='about'
                     rows='3'
+                    value={info}
+                    onChange={(e) => setInfo(e.target.value)}
                     className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                   ></textarea>
                 </div>
                 <p className='mt-3 text-sm leading-6 text-gray-600'>Write a few sentences about yourself.</p>
               </div>
 
-              <div className='pb-5'>
-                <label htmlFor='username' className='block text-sm font-medium leading-6 text-gray-900'>
-                  Username
-                </label>
-                <div className='mt-2'>
-                  <input
-                    type='text'
-                    id='username'
-                    className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                    required
-                  />
-                </div>
-              </div>
+              
 
               <div className='mt-6 flex items-center justify-end gap-x-6'>
                 <button onClick={onClose} type='button' className='text-sm font-semibold leading-6 text-gray-900'>
                   Close
                 </button>
-                <button type='button' className='text-sm font-semibold leading-6 text-gray-900'>
-                  Cancel
-                </button>
                 <button
                   type='submit'
+                  onClick={handleSaveChanges}
                   className='rounded-md bg-blue-500 text-white hover:bg-blue-600 px-3 py-2 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                 >
                   Save change

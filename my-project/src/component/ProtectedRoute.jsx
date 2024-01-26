@@ -1,14 +1,25 @@
-import React from 'react'
-import { Navigate } from 'react-router-dom'
-import { UserAuth } from '../context/AuthContext'
+import { onAuthStateChanged } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../authentication/firebase';
+import { UserAuth } from '../context/AuthContext';
 
-const ProtectedRoute=({children}) => {
-    const {user}=UserAuth()
-    if (!user){
-        return<Navigate to='/'></Navigate>
+const ProtectedRoute = ({ children }) => {
+  const {user } = UserAuth();
+  const navigate = useNavigate();
+
+
+  onAuthStateChanged(auth, (currentUser) => {
+    if (!currentUser) {
+      navigate('/');
+      return;
     }
+    else {
+      return children; // Allow access to the protected route (create page)
+    }
+  });
 
   return children;
-}
+  
+};
 
-export default ProtectedRoute
+export default ProtectedRoute;

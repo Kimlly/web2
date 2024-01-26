@@ -1,15 +1,20 @@
 import { clsx } from 'clsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { v4 } from 'uuid';
 import { db, storage } from '../authentication/firebase';
 import HomepageLayout from '../layout/HomepageLayout';
+import Swal from 'sweetalert2';
 
 // ----------- import some firebase functions --------------
-import { addDoc, collection, onSnapshot } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { UserAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const CreatePost = () => {
+  const { user } = UserAuth();
+  const navigate  = useNavigate();
   const [title, setTitle] = useState('');
   const [errorTitle, setErrorTitle] = useState('');
 
@@ -22,7 +27,7 @@ const CreatePost = () => {
 
   const [uploading, setUploading] = useState(false);
 
-  const [imgURL, setImgURL] = useState([]);
+  // const [imgURL, setImgURL] = useState([]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -56,10 +61,19 @@ const CreatePost = () => {
     const data = await uploadBytes(fileRef, fileImage);
     const val = await getDownloadURL(data.ref);
 
+    console.log(user);
+
     const inputData = {
       title,
       description,
       imageURL: val,
+      postOwner: {
+        uid: user.uid,
+        email: user.email,
+      },
+      likes: [],
+      comments: [],
+      createdAt: new Date(Date.now()).toISOString(),
     };
 
     console.log(inputData);
@@ -68,44 +82,30 @@ const CreatePost = () => {
     const dbCollectionRef = collection(db, 'posts');
 
     addDoc(dbCollectionRef, inputData).then((res) => {
-      console.log(res);
+      const postId = res.id;
+      console.log(postId);
+
+      getDoc(doc(db, 'users', user.uid)).then((userData) => {
+        const updatePosts = userData.data().posts;
+        updatePosts.push(postId);
+
+        setDoc(doc(db, 'users', user.uid), { ...userData.data(), posts: updatePosts });
+      });
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Your post has been submitted successfully.',
+      });
+      // Clear the form after submission
+      setTitle('');
+      setDescription('');
+      setImage('');
+      setFileImage('');
       setUploading(false);
     });
 
-    onSnapshot(dbCollectionRef, (snapshot) => {
-      let posts = [];
-      snapshot.docs.forEach((doc) => {
-        posts.push({ ...doc.data(), id: doc.id });
-      });
-      console.log(posts);
-    });
-
-    // ----------- Done --------------
-
-    // getDocs(dbCollectionRef)
-    // .then((snapshot)=>{
-    //   let posts=[]
-    //   snapshot.docs.forEach((doc)=>{
-    //     posts.push({...doc.data(),id:doc.id})
-    //   })
-
-    //   console.log(posts)
-    // })
-    // .catch(err=>{
-    //   console.log(err.message)
-    // })
   };
 
-  // DELETE
-  // const deleteimg=document.querySelector('.delete')
-  // deleteimg.addEventListener('submit',(e)=>{
-  //   e.preventDefault()
-  //   const docRef=doc(storage,'posts',deleteimg.id.value)
-  //   deleteDoc(docRef)
-  //   .then(()=>{
-  //     deleteimg.reset()
-  //   })
-  // })
 
   const handleUploadImg = (e) => {
     e.preventDefault();
@@ -128,11 +128,21 @@ const CreatePost = () => {
   const cn = (...inputs) => {
     return twMerge(clsx(inputs));
   };
+  
+  useEffect(()=> {
+    
+    console.log(user.role);
+  if (user.role === "user") {
+    navigate('/');
+  }
+  },[user])
 
   return (
     <HomepageLayout>
       <div className='w-full'>
         <div className='flex flex-col max-w-[500px] mx-auto my-10 px-5 lg:px-0'>
+          <h1 className='text-3xl font-semibold text-center my-5'>Create Post</h1>
+
           <form className='mt-5 space-y-10' onSubmit={(e) => onSubmit(e)}>
             {image ? null : (
               <label
@@ -182,8 +192,6 @@ const CreatePost = () => {
                 </div>
               )}
             </div>
-
-            <h1 className='text-3xl font-semibold text-center mb-10'>Create Post</h1>
 
             <div className='flex flex-col gap-2'>
               <label htmlFor='title' className='text-xl font-semibold'>
