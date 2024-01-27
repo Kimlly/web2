@@ -61,4 +61,4 @@ function Teampage() {
   )
 }
 
-export default Teampage
+export default Teampage;
