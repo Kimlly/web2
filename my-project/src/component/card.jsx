@@ -43,7 +43,7 @@ function Card({ data }) {
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'users', user.uid), (doc) => {
-      if (doc.data().savePosts.includes(data.id)) {
+      if (doc.data().savePosts && doc.data().savePosts.includes(data.id)) {
         setIsSaved(true);
       } else {
         setIsSaved(false);
@@ -55,7 +55,7 @@ function Card({ data }) {
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'users', user.uid), (doc) => {
-      if (doc.data().reportedPosts.includes(data.id)) {
+      if (doc.data().reportedPosts && doc.data().reportedPosts.includes(data.id)) {
         setIsReported(true);
       } else {
         setIsReported(false);
