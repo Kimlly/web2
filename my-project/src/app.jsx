@@ -5,7 +5,7 @@ import Login from './page/Loginpage';
 import Signup from './page/Signuppage';
 import Homepage from './page/Homepage';
 import Teampage from './page/Teampage';
-import Createpage from './page/createpage';
+import CreatePost from './page/createpage';
 import Userpfpage from './page/Userpfpage';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './component/ProtectedRoute';
@@ -105,7 +105,7 @@ function App() {
               path='/createpage'
               element={
                 <ProtectedRoute>
-                  <Createpage />
+                  <CreatePost />
                 </ProtectedRoute>
               }
             />
