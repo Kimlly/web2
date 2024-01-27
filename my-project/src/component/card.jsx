@@ -7,6 +7,7 @@ import { UserAuth } from '../context/AuthContext';
 import Swal from 'sweetalert2';
 
 
+
 function Card({ data }) {
   const { user } = UserAuth();
 
@@ -321,7 +322,7 @@ function Card({ data }) {
           Share
         </button>
 
-        {!user.posts.includes(data.id) && (
+        {user.posts &&!user.posts.includes(data.id) && (
           <button
             type='button'
             onClick={(e) => handleSavePost(e)}
