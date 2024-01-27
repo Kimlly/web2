@@ -4,7 +4,7 @@ import Landingpage from './page/Landingpage';
 import Login from './page/Loginpage';
 import Signup from './page/Signuppage';
 import Homepage from './page/Homepage';
-import Teampage from './page/Teampage';
+import Teampage from './page/teampage';
 import CreatePost from './page/createpage';
 import Userpfpage from './page/Userpfpage';
 import { AuthContextProvider } from './context/AuthContext';
