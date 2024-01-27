@@ -6,7 +6,7 @@ import Signup from './page/Signuppage';
 import Homepage from './page/Homepage';
 import Teampage from './page/teampage';
 import CreatePost from './page/createpage';
-import Userpfpage from './page/Userpfpage';
+import Userpfpage from './page/userpfpage';
 import { AuthContextProvider } from './context/AuthContext';
 import ProtectedRoute from './component/ProtectedRoute';
 import Sidebar from './component/sideBar';
