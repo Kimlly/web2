@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import { addDoc, collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, onSnapshot, setDoc,serverTimestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { db } from '../authentication/firebase';
 import cn from '../utils/cn';
 import { UserAuth } from '../context/AuthContext';
 import Swal from 'sweetalert2';
+
 
 function Card({ data }) {
   const { user } = UserAuth();
@@ -13,8 +14,8 @@ function Card({ data }) {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(data.likes.length);
   const [isSaved, setIsSaved] = useState(false);
-
   const [comment, setComment] = useState('');
+  const [isReported, setIsReported] = useState(false);
   
   // fetch and set the post owner's data from the Firestore database when the component mounts.
   useEffect(() => {
@@ -45,6 +46,18 @@ function Card({ data }) {
         setIsSaved(true);
       } else {
         setIsSaved(false);
+      }
+    });
+
+    return () => unsub;
+  }, []);
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'users', user.uid), (doc) => {
+      if (doc.data().reportedPosts.includes(data.id)) {
+        setIsReported(true);
+      } else {
+        setIsReported(false);
       }
     });
 
@@ -161,6 +174,55 @@ function Card({ data }) {
       }
     });
   };
+
+  const handleReportPost = async (e) => {
+    e.preventDefault();
+  
+    if (!isReported) {
+      try {
+        const userDocRef = doc(db, 'users', user.uid);
+        const userData = (await getDoc(userDocRef)).data();
+  
+        const updateReports = userData.reportedPosts || [];
+        updateReports.push(data.id);
+  
+        // Update the 'reportedPosts' field in the 'users' collection
+        await setDoc(userDocRef, { ...userData, reportedPosts: updateReports });
+  
+        // Create a new report in the 'reports' collection
+        await addDoc(collection(db, 'reports'), {
+          postId: data.id,
+          reporterId: user.uid,
+          createdAt: serverTimestamp(),
+        });
+  
+        setIsReported(true);
+  
+        // You may also want to handle reporting on the server side (Firebase) here
+        // For example, you can update a "reports" field in the 'posts' collection
+      } catch (error) {
+        console.error('Error reporting post:', error);
+      }
+    } else {
+      try {
+        const userDocRef = doc(db, 'users', user.uid);
+        const userData = (await getDoc(userDocRef)).data();
+  
+        const updatedReports = userData.reportedPosts;
+        const index = updatedReports.findIndex((postId) => postId === data.id);
+  
+        updatedReports.splice(index, 1);
+  
+        // Update the 'reportedPosts' field in the 'users' collection
+        await setDoc(userDocRef, { ...userData, reportedPosts: updatedReports });
+  
+        setIsReported(false);
+      } catch (error) {
+        console.error('Error updating reported posts:', error);
+      }
+    }
+  };
+  
 
   return (
     <div className=' p-6 bg-white border border-gray-200 rounded-2xl shadow dark:bg-gray-800 dark:border-gray-700'>
@@ -290,7 +352,13 @@ function Card({ data }) {
         )}
         <button
           type='button'
-          className='inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white'
+          className={cn(
+            'inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white',
+            {
+              'bg-blue-700 text-white dark:bg-blue-700': isReported,
+            }
+          )}
+          onClick={(e) => handleReportPost(e)}
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -306,7 +374,7 @@ function Card({ data }) {
               d='M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z'
             />
           </svg>
-          Report
+          {isReported ? 'Reported' : 'Report'}
         </button>
       </div>
 
@@ -350,7 +418,7 @@ function Card({ data }) {
                     
                   </div>
                   
-                  {user.uid === data.postOwner.uid && (
+                  {(user.uid === data.postOwner.uid || user.role==="admin") && (
             <>
               <button
                 id={`dropdownMenuIconButton_${index}`}
