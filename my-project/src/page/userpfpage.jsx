@@ -180,7 +180,7 @@ function Userpfpage() {
           <div className='mt-5'>
             <p className='text-xl font-semibold mb-1'>{user.username}</p>
             <a
-              href='#'
+              
               className='text-2xl font-medium leading-none text-gray-900 transition duration-500 ease-in-out hover:text-indigo-600'
             >
               {user && user.email}
