@@ -3,7 +3,6 @@ import Contactpage from './page/Contactpage';
 import Landingpage from './page/Landingpage';
 import Login from './page/Loginpage';
 import Signup from './page/Signuppage';
-import Teampage from './page/Teampage';
 import Homepage from './page/Homepage';
 import Createpage from './page/createpage';
 import Userpfpage from './page/Userpfpage';
